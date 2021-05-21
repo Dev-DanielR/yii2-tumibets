@@ -39,6 +39,12 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
+            ['label' => 'Users', 'url' => ['/user/index']],
+            ['label' => 'Teams', 'url' => ['/team/index']],
+            ['label' => 'Tournaments', 'url' => ['/tournament/index']],
+            ['label' => 'Tournament Dates', 'url' => ['/tournament-date/index']],
+            ['label' => 'Fixtures', 'url' => ['/fixture/index']],
+            ['label' => 'Bets', 'url' => ['/bet/index']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (
