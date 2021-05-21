@@ -72,7 +72,7 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new User();
-        if ($model->load(Yii::$app->request->post() && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', "User created successfully.");
             return $this->redirect(['index']);
         }
