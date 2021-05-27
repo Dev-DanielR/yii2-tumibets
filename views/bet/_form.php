@@ -12,7 +12,6 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'id')->textInput() ?>
     <?= $form->field($model, 'fixture_id')->textInput() ?>
     <?= $form->field($model, 'user_id')->textInput() ?>
     <?= $form->field($model, 'teamA_score')->textInput() ?>
