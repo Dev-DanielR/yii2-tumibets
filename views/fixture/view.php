@@ -20,7 +20,7 @@ if ($tournament !== null && $tournament_date !== null) {
     ];
     $this->params['breadcrumbs'][] = [
         'label' => 'Tournament Dates',
-        'url'   => ['tournament-date/index', 'tournament_id' => $tournament->tournament_id]
+        'url'   => ['tournament-date/index', 'tournament_id' => $tournament->id]
     ];
     $this->params['breadcrumbs'][] = [
         'label' => $tournament_date->name,
