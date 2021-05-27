@@ -22,7 +22,22 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'is_active:boolean',
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {dates}',
+                'buttons' => [
+                    'dates' => function ($url, $model) {
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-list-alt"></span>',
+                            ['tournament-date/index', 'tournament_id' => $model->id],
+                            [
+                                'title' => 'Dates',
+                                'data-pjax' => '0',
+                            ]
+                        );
+                    },
+                ],
+            ]
         ],
     ]); ?>
 

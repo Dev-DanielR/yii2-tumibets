@@ -4,8 +4,9 @@ namespace app\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\data\ActiveDataProvider;
+use app\models\Tournament;
 use app\models\TournamentDate;
-use app\models\TournamentDateSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -45,11 +46,12 @@ class TournamentDateController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new TournamentDateSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $params       = Yii::$app->request->getQueryParams();
+        $navigation   = $this->findNavigationModels($params['tournament_id'] ?? null);
+        $dataProvider = $this->search($params);
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'tournament'   => $navigation['tournament'],
+            'dataProvider' => $dataProvider
         ]);
     }
 
@@ -61,7 +63,12 @@ class TournamentDateController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', ['model' => $this->findModel($id)]);
+        $model      = $this->findModel($id);
+        $navigation = $this->findNavigationModels($model->tournament_id);
+        return $this->render('view', [
+            'tournament'       => $navigation['tournament'],
+            'tournament_date'  => $model,
+        ]);
     }
 
     /**
@@ -71,12 +78,10 @@ class TournamentDateController extends Controller
      */
     public function actionCreate()
     {
-        $model = new TournamentDate();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', "Tournament date updated successfully.");
-            return $this->redirect(['index']);
-        }
-        return $this->render('create', ['model' => $model]);
+        $model  = new TournamentDate();
+        $params = Yii::$app->request->getQueryParams();
+        $model->tournament_id = $params['tournament_id'] ?? null;
+        return $this->helperForm($model, 'create', 'Create Tournament Date');
     }
 
     /**
@@ -84,16 +89,11 @@ class TournamentDateController extends Controller
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', "Tournament date updated successfully.");
-            return $this->redirect(['index']);
-        }
-        return $this->render('update', ['model' => $model]);
+        return $this->helperForm($model, 'update', 'Update Tournament Date: ' . $model->name);
     }
 
     /**
@@ -121,5 +121,66 @@ class TournamentDateController extends Controller
     {
         if (($model = TournamentDate::findOne($id)) !== null) return $model;
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * Finds models for navigation
+     * @return [Tournament]
+     */
+    protected function findNavigationModels($id)
+    {
+        return [
+            'tournament' => Tournament::find()->select(['id', 'name'])->where(['id' => $id])->one()
+        ];
+    }
+
+    /**
+     * Finds models for dependencies
+     * @return [Tournament[]]
+     */
+    protected function findDependencyModels()
+    {
+        return [
+            'tournaments' => Tournament::find()->select(['id', 'name'])->all()
+        ];
+    }
+
+    /**
+     * Creates data provider instance with search query applied
+     * @param array $params
+     * @return ActiveDataProvider
+     */
+    protected function search($params)
+    {
+        $query        = TournamentDate::find()->with('tournament');
+        $dataProvider = new ActiveDataProvider(['query' => $query]);
+        $query->andFilterWhere([
+            'id'            => $params['id']            ?? null,
+            'tournament_id' => $params['tournament_id'] ?? null,
+            'is_active'     => $params['is_active']     ?? null,
+        ],['like', 'name', $params['name'] ?? null]);
+        return $dataProvider;
+    }
+
+    /**
+     * Helps render form for Create & Update actions.
+     */
+    protected function helperForm($model, $actionName, $formTitle)
+    {
+        $navigation   = $this->findNavigationModels($model->tournament_id);
+        $dependencies = $this->findDependencyModels();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Tournament date ' . $actionName .'d successfully.');
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('_form', [
+            'formTitle'       => $formTitle,
+            'actionName'      => $actionName,
+            'tournament'      => $navigation['tournament'],
+            'tournament_date' => $model,
+            'tournaments'     => $dependencies['tournaments']
+        ]);
     }
 }

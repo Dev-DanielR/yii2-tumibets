@@ -32,5 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'is_active:boolean',
         ],
     ]) ?>
+    <?= Html::a('View Dates', ['tournament-date/index', 'tournament_id' => $model->id], ['class' => 'btn btn-success']) ?>
 
 </div>
