@@ -21,7 +21,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'id',
             'name',
-            'image',
+            [
+                'label'  => 'Image',
+                'format' => 'html',
+                'value'  => function ($model) {
+                    return Html::img(Yii::$app->request->BaseUrl.'/uploads/teamImages/' . $model->image_path,
+                    ['width' => '40px']);
+                }
+            ],
             'is_active:boolean',
             ['class' => 'yii\grid\ActionColumn'],
         ],

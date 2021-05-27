@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "team".
@@ -10,6 +11,7 @@ use Yii;
  * @property int $id
  * @property string $name
  * @property string $image
+ * @property string $image_path
  * @property bool $is_active
  *
  * @property Fixture[] $fixtures
@@ -17,6 +19,8 @@ use Yii;
  */
 class Team extends \yii\db\ActiveRecord
 {
+    public $image;
+
     /**
      * {@inheritdoc}
      */
@@ -31,13 +35,11 @@ class Team extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'name', 'image'], 'required'],
-            [['id'], 'integer'],
+            [['name', 'image'], 'required'],
             [['is_active'], 'boolean'],
             [['name'], 'string', 'max' => 64],
-            [['image'], 'string', 'max' => 256],
+            [['image'], 'file', 'extensions' => 'png'],
             [['name'], 'unique'],
-            [['id'], 'unique'],
         ];
     }
 

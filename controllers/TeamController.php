@@ -8,6 +8,7 @@ use app\models\Team;
 use app\models\TeamSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 use yii\filters\VerbFilter;
 
 /**
@@ -72,9 +73,15 @@ class TeamController extends Controller
     public function actionCreate()
     {
         $model = new Team();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', "Team created successfully.");
-            return $this->redirect(['index']);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->image = UploadedFile::getInstance($model, 'image');
+            $model->image_path = md5($model->name) . '.' . $model->image->extension;
+            
+            if($model->save()
+            && $model->image->saveAs(SITE_ROOT . '\\uploads\\teamImages\\' . $model->image_path)) {
+                Yii::$app->session->setFlash('success', "Team created successfully.");
+                return $this->redirect(['index']);
+            }
         }
         return $this->render('create', ['model' => $model]);
     }
@@ -89,9 +96,15 @@ class TeamController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', "Team updated successfully.");
-            return $this->redirect(['index']);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->image = UploadedFile::getInstance($model, 'image');
+            $model->image_path = md5($model->name) . '.' . $model->image->extension;
+            
+            if($model->save()
+            && $model->image->saveAs(SITE_ROOT . '\\uploads\\teamImages\\' . $model->image_path)) {
+                Yii::$app->session->setFlash('success', "Team updated successfully.");
+                return $this->redirect(['index']);
+            }
         }
         return $this->render('update', ['model' => $model]);
     }
