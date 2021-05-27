@@ -53,8 +53,8 @@ class Bet extends \yii\db\ActiveRecord
     {
         return [
             'id'          => 'ID',
-            'fixture_id'  => 'Fixture ID',
-            'user_id'     => 'User ID',
+            'fixture_id'  => 'Fixture',
+            'user_id'     => 'User',
             'teamA_score' => 'Team A Score',
             'teamB_score' => 'Team B Score',
             'bet_score'   => 'Bet Score',

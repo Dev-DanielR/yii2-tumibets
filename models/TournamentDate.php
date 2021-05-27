@@ -31,11 +31,10 @@ class TournamentDate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'tournament_id'], 'required'],
-            [['id', 'tournament_id'], 'integer'],
+            [['tournament_id'], 'required'],
+            [['tournament_id'], 'integer'],
             [['is_active'], 'boolean'],
             [['name'], 'string', 'max' => 45],
-            [['id'], 'unique'],
             [['tournament_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tournament::className(), 'targetAttribute' => ['tournament_id' => 'id']],
         ];
     }
@@ -47,7 +46,7 @@ class TournamentDate extends \yii\db\ActiveRecord
     {
         return [
             'id'            => 'ID',
-            'tournament_id' => 'Tournament ID',
+            'tournament_id' => 'Tournament',
             'name'          => 'Name',
             'is_active'     => 'Is Active',
         ];

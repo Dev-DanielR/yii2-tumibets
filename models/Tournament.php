@@ -29,11 +29,8 @@ class Tournament extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
-            [['id'], 'integer'],
             [['is_active'], 'boolean'],
             [['name'], 'string', 'max' => 45],
-            [['id'], 'unique'],
         ];
     }
 

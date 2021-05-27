@@ -38,11 +38,10 @@ class Fixture extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'tournament_date_id', 'teamA_id', 'teamB_id'], 'required'],
-            [['id', 'tournament_date_id', 'teamA_id', 'teamB_id', 'teamA_score', 'teamB_score'], 'integer'],
+            [['tournament_date_id', 'teamA_id', 'teamB_id'], 'required'],
+            [['tournament_date_id', 'teamA_id', 'teamB_id', 'teamA_score', 'teamB_score'], 'integer'],
             [['start', 'end'], 'safe'],
             [['is_active'], 'boolean'],
-            [['id'], 'unique'],
             [['teamA_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['teamA_id' => 'id']],
             [['teamB_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['teamB_id' => 'id']],
             [['tournament_date_id'], 'exist', 'skipOnError' => true, 'targetClass' => TournamentDate::className(), 'targetAttribute' => ['tournament_date_id' => 'id']],
@@ -56,9 +55,9 @@ class Fixture extends \yii\db\ActiveRecord
     {
         return [
             'id'                 => 'ID',
-            'tournament_date_id' => 'Tournament Date ID',
-            'teamA_id'           => 'Team A ID',
-            'teamB_id'           => 'Team B ID',
+            'tournament_date_id' => 'Tournament Date',
+            'teamA_id'           => 'Team A',
+            'teamB_id'           => 'Team B',
             'teamA_score'        => 'Team A Score',
             'teamB_score'        => 'Team B Score',
             'start'              => 'Start',
