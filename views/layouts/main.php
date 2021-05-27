@@ -30,10 +30,8 @@ AppAsset::register($this);
     <?php
     NavBar::begin([
         'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
+        'brandUrl'   => Yii::$app->homeUrl,
+        'options'    => ['class' => 'navbar-inverse navbar-fixed-top'],
     ]);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
@@ -41,9 +39,11 @@ AppAsset::register($this);
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'Users', 'url' => ['/user/index']],
             ['label' => 'Teams', 'url' => ['/team/index']],
-            ['label' => 'Tournaments', 'url' => ['/tournament/index']],
-            ['label' => 'Tournament Dates', 'url' => ['/tournament-date/index']],
-            ['label' => 'Fixtures', 'url' => ['/fixture/index']],
+            ['label' => 'Tournaments', 'items' => [
+                ['label' => 'Tournaments', 'url' => ['/tournament/index']],
+                ['label' => 'Tournament Dates', 'url' => ['/tournament-date/index']],
+                ['label' => 'Fixtures', 'url' => ['/fixture/index']],
+            ]],
             ['label' => 'Bets', 'url' => ['/bet/index']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
