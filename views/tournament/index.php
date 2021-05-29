@@ -23,9 +23,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'is_active:boolean',
             [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {dates}',
-                'buttons' => [
+                'class'    => 'yii\grid\ActionColumn',
+                'template' => '{view}{dates}',
+                'buttons'  => [
                     'dates' => function ($url, $model) {
                         return Html::a(
                             '<span class="glyphicon glyphicon-list-alt"></span>',

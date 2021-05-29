@@ -34,8 +34,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'teamB_score',
             'bet_score',
             'is_active:boolean',
-            'created:datetime',
-            'updated:datetime',
+            'created',
+            'updated',
         ],
     ]) ?>
 

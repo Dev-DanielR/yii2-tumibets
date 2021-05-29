@@ -71,11 +71,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'teamA_score',
             'teamB_score',
-            'start:datetime',
-            'end:datetime',
+            'start',
+            'end',
             'is_active:boolean',
             [
-                'class' => 'yii\grid\ActionColumn',
+                'class'    => 'yii\grid\ActionColumn',
                 'template' => '{view}',
             ]
         ],
