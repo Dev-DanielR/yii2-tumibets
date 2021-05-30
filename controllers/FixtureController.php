@@ -36,7 +36,11 @@ class FixtureController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'index'  => ['POST'],
+                    'view'   => ['POST'],
+                    'create' => ['POST'],
+                    'update' => ['POST'],
+                    'delete' => ['POST']
                 ],
             ],
         ];
@@ -48,7 +52,7 @@ class FixtureController extends Controller
      */
     public function actionIndex()
     {
-        $params       = Yii::$app->request->getQueryParams();
+        $params       = Yii::$app->request->post();
         $navigation   = $this->findNavigationModels($params['tournament_date_id'] ?? null);
         $dataProvider = $this->search($params);
         return $this->render('index', [
@@ -60,12 +64,12 @@ class FixtureController extends Controller
 
     /**
      * Displays a single Fixture model.
-     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView()
     {
+        $id         = Yii::$app->request->post('id');
         $model      = $this->findModel($id);
         $navigation = $this->findNavigationModels($model->tournament_date_id);
         return $this->render('view', [
@@ -83,7 +87,7 @@ class FixtureController extends Controller
     public function actionCreate()
     {
         $model  = new Fixture();
-        $params = Yii::$app->request->getQueryParams();
+        $params = Yii::$app->request->post();
         $model->tournament_date_id = $params['tournament_date_id'] ?? null;
         return $this->helperForm($model, 'create', 'Create Fixture');
     }
@@ -91,11 +95,11 @@ class FixtureController extends Controller
     /**
      * Updates an existing Fixture model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate()
     {
+        $id    = Yii::$app->request->post('id');
         $model = $this->findModel($id);
         return $this->helperForm($model, 'update', 'Update Fixture: ' . $model->teamA->name . ' vs ' . $model->teamB->name);
     }
@@ -103,12 +107,12 @@ class FixtureController extends Controller
     /**
      * Deletes an existing Fixture model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete()
     {
+        $id = Yii::$app->request->post('id');
         $this->findModel($id)->delete();
         Yii::$app->session->setFlash('success', "Fixture deleted successfully.");
         return $this->redirect(['index']);
@@ -137,7 +141,7 @@ class FixtureController extends Controller
     protected function findNavigationModels($id)
     {
         $tournament_date = null;
-        $tournament = null;
+        $tournament      = null;
         if ($id !== null) {
             $tournament_date = TournamentDate::find()->select(['id', 'name', 'tournament_id'])->where(['id' => $id])->one();
             $tournament = Tournament::find()->select(['id', 'name'])->where(['id' => $tournament_date->tournament_id])->one();
@@ -159,7 +163,6 @@ class FixtureController extends Controller
             'teams'            => Team::find()->select(['id', 'name'])->all()
         ];
     }
-
 
     /**
      * Creates data provider instance with search query applied
@@ -184,7 +187,7 @@ class FixtureController extends Controller
         return $dataProvider;
     }
 
-        /**
+    /**
      * Helps render form for Create & Update actions.
      */
     protected function helperForm($model, $actionName, $formTitle)

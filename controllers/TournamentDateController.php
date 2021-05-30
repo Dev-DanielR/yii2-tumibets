@@ -34,7 +34,11 @@ class TournamentDateController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'index'  => ['POST'],
+                    'view'   => ['POST'],
+                    'create' => ['POST'],
+                    'update' => ['POST'],
+                    'delete' => ['POST']
                 ],
             ],
         ];
@@ -46,7 +50,7 @@ class TournamentDateController extends Controller
      */
     public function actionIndex()
     {
-        $params       = Yii::$app->request->getQueryParams();
+        $params       = Yii::$app->request->post();
         $navigation   = $this->findNavigationModels($params['tournament_id'] ?? null);
         $dataProvider = $this->search($params);
         return $this->render('index', [
@@ -57,12 +61,12 @@ class TournamentDateController extends Controller
 
     /**
      * Displays a single TournamentDate model.
-     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView()
     {
+        $id         = Yii::$app->request->post('id');
         $model      = $this->findModel($id);
         $navigation = $this->findNavigationModels($model->tournament_id);
         return $this->render('view', [
@@ -79,7 +83,7 @@ class TournamentDateController extends Controller
     public function actionCreate()
     {
         $model  = new TournamentDate();
-        $params = Yii::$app->request->getQueryParams();
+        $params = Yii::$app->request->post();
         $model->tournament_id = $params['tournament_id'] ?? null;
         return $this->helperForm($model, 'create', 'Create Tournament Date');
     }
@@ -90,8 +94,9 @@ class TournamentDateController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate()
     {
+        $id    = Yii::$app->request->post('id');
         $model = $this->findModel($id);
         return $this->helperForm($model, 'update', 'Update Tournament Date: ' . $model->name);
     }
@@ -103,8 +108,9 @@ class TournamentDateController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete()
     {
+        $id = Yii::$app->request->post('id');
         $this->findModel($id)->delete();
         Yii::$app->session->setFlash('success', "Tournament date deleted successfully.");
         return $this->redirect(['index']);

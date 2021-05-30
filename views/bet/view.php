@@ -7,21 +7,32 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Bet */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Bets', 'url' => ['index']];
+$this->params['breadcrumbs'][] = [
+    'label' => 'Bets',
+    'url'   => ['index'],
+    'data'  => ['method'  => 'post']
+];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
 ?>
+
 <div class="bet-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Update', ['update', 'id' => $model->id], [
+            'class' => 'btn btn-primary',
+            'data' => [
+                'method' => 'post',
+                'params' => ['id' => $model->id]
+            ]
+        ]) ?>
+        <?= Html::a('Delete', ['delete'], [
             'class' => 'btn btn-danger',
             'data' => [
+                'method'  => 'post',
                 'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
+                'params'  => ['id' => $model->id]
+            ]
         ]) ?>
     </p>
     <?= DetailView::widget([

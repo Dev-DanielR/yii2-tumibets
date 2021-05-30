@@ -4,8 +4,8 @@ namespace app\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\data\ActiveDataProvider;
 use app\models\Team;
-use app\models\TeamSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
@@ -34,7 +34,11 @@ class TeamController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'index'  => ['POST'],
+                    'view'   => ['POST'],
+                    'create' => ['POST'],
+                    'update' => ['POST'],
+                    'delete' => ['POST']
                 ],
             ],
         ];
@@ -46,22 +50,18 @@ class TeamController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new TeamSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        $dataProvider = $this->search(Yii::$app->request->queryParams);
+        return $this->render('index', ['dataProvider' => $dataProvider]);
     }
 
     /**
      * Displays a single Team model.
-     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView()
     {
+        $id = Yii::$app->request->post('id');
         return $this->render('view', ['model' => $this->findModel($id)]);
     }
 
@@ -73,51 +73,32 @@ class TeamController extends Controller
     public function actionCreate()
     {
         $model = new Team();
-        if ($model->load(Yii::$app->request->post())) {
-            $model->image = UploadedFile::getInstance($model, 'image');
-            $model->image_path = md5($model->name) . '.' . $model->image->extension;
-            
-            if($model->save()
-            && $model->image->saveAs(SITE_ROOT . '\\uploads\\teamImages\\' . $model->image_path)) {
-                Yii::$app->session->setFlash('success', "Team created successfully.");
-                return $this->redirect(['index']);
-            }
-        }
-        return $this->render('create', ['model' => $model]);
+        return $this->helperForm($model, 'create', 'Create Team');
+
     }
 
     /**
      * Updates an existing Team model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate()
     {
+        $id    = Yii::$app->request->post('id');
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post())) {
-            $model->image = UploadedFile::getInstance($model, 'image');
-            $model->image_path = md5($model->name) . '.' . $model->image->extension;
-            
-            if($model->save()
-            && $model->image->saveAs(SITE_ROOT . '\\uploads\\teamImages\\' . $model->image_path)) {
-                Yii::$app->session->setFlash('success', "Team updated successfully.");
-                return $this->redirect(['index']);
-            }
-        }
-        return $this->render('update', ['model' => $model]);
+        return $this->helperForm($model, 'update', 'Update Team: ' . $model->name);
     }
 
     /**
      * Deletes an existing Team model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete()
     {
+        $id = Yii::$app->request->post('id');
         $this->findModel($id)->delete();
         Yii::$app->session->setFlash('success', "Team deleted successfully.");
         return $this->redirect(['index']);
@@ -134,5 +115,43 @@ class TeamController extends Controller
     {
         if (($model = Team::findOne($id)) !== null) return $model;
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * Creates data provider instance with search query applied
+     * @param array $params
+     * @return ActiveDataProvider
+     */
+    protected function search($params)
+    {
+        $query        = Team::find();
+        $dataProvider = new ActiveDataProvider(['query' => $query]);
+        $query->andFilterWhere([
+            'id'        => $params['id']            ?? null,
+            'is_active' => $params['is_active']     ?? null,
+        ],['like', 'name', $params['name'] ?? null]);
+        return $dataProvider;
+    }
+
+    /**
+     * Helps render form for Create & Update actions.
+     */
+    protected function helperForm($model, $actionName, $formTitle)
+    {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->image = UploadedFile::getInstance($model, 'image');
+            $model->image_path = md5($model->name) . '.' . $model->image->extension;
+            
+            if($model->save()
+            && $model->image->saveAs(SITE_ROOT . '\\uploads\\teamImages\\' . $model->image_path)) {
+                Yii::$app->session->setFlash('success', 'Team ' . $actionName . ' successfully.');
+                return $this->redirect(['index']);
+            }
+        }
+        return $this->render('_form', [
+            'formTitle'  => $formTitle,
+            'actionName' => $actionName,
+            'model'      => $model
+        ]);
     }
 }

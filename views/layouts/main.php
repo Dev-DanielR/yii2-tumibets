@@ -37,14 +37,32 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'Users', 'url' => ['/user/index']],
-            ['label' => 'Teams', 'url' => ['/team/index']],
+            '<li>' . Html::a('Users',
+                ['user/index'],
+                ['data' => [ 'method' => 'post']])
+            . '</li>',
+            '<li>' . Html::a('Teams',
+                ['team/index'],
+                ['data' => [ 'method' => 'post']])
+            . '</li>',
             ['label' => 'Tournaments', 'items' => [
-                ['label' => 'Tournaments', 'url' => ['/tournament/index']],
-                ['label' => 'Tournament Dates', 'url' => ['/tournament-date/index']],
-                ['label' => 'Fixtures', 'url' => ['/fixture/index']],
+                '<li>' . Html::a('Tournaments',
+                    ['tournament/index'],
+                    ['data' => [ 'method' => 'post']])
+                . '</li>',
+                '<li>' . Html::a('Tournament Dates',
+                    ['tournament-date/index'],
+                    ['data' => [ 'method' => 'post']])
+                . '</li>',
+                '<li>' . Html::a('Fixtures',
+                    ['fixture/index'],
+                    ['data' => [ 'method' => 'post']])
+                . '</li>'
             ]],
-            ['label' => 'Bets', 'url' => ['/bet/index']],
+            '<li>' . Html::a('Bets',
+                ['bet/index'],
+                ['data' => [ 'method' => 'post']])
+            . '</li>',
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (

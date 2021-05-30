@@ -7,21 +7,30 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Tournament */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Tournaments', 'url' => ['index']];
+$this->params['breadcrumbs'][] = [
+    'label' => 'Tournaments',
+    'url'   => ['index'],
+    'data'  => ['method' => 'post']
+];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
 ?>
+
 <div class="tournament-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
+        <?= Html::a('Update', ['update'], ['class' => 'btn btn-primary',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
                 'method' => 'post',
-            ],
+                'params' => ['id' => $model->id]
+            ]
+        ]) ?>
+        <?= Html::a('Delete', ['delete'], ['class' => 'btn btn-danger',
+            'data' => [
+                'method'  => 'post',
+                'confirm' => 'Are you sure you want to delete this item?',
+                'params'  => ['id' => $model->id]
+            ]
         ]) ?>
     </p>
     <?= DetailView::widget([
@@ -32,6 +41,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'is_active:boolean',
         ],
     ]) ?>
-    <?= Html::a('View Dates', ['tournament-date/index', 'tournament_id' => $model->id], ['class' => 'btn btn-success']) ?>
+    <?= Html::a('View Dates', ['tournament-date/index'], ['class' => 'btn btn-success',
+        'data' => [
+            'method' => 'post',
+            'params' => ['tournament_id' => $model->id]
+        ]
+    ]) ?>
 
 </div>

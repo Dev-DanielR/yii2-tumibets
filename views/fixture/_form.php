@@ -15,38 +15,57 @@ use dosamigos\datetimepicker\DateTimePicker;
 /* @var $teams            app\models\Team[] */
 /* @var $form             yii\widgets\ActiveForm */
 
+$this->params['breadcrumbs'][] = [
+    'label' => 'Tournaments',
+    'url'   => ['tournament/index'],
+    'data'  => ['method' => 'post']
+];
 if ($tournament !== null) {
     $this->params['breadcrumbs'][] = [
-        'label' => 'Tournaments',
-        'url'   => ['tournament/index']
-    ];
-    $this->params['breadcrumbs'][] = [
         'label' => $tournament->name,
-        'url'   => ['tournament/view', 'id' => $tournament->id]
+        'url'   => ['tournament/view'],
+        'data'  => [
+            'method' => 'post',
+            'params' => ['id' => $tournament->id]
+        ]
     ];
     $this->params['breadcrumbs'][] = [
         'label' => 'Tournament Dates',
-        'url'   => ['tournament-date/index', 'tournament_id' => $tournament->id]
+        'url'   => ['tournament/index'],
+        'data'  => [
+            'method' => 'post',
+            'params' => ['tournament_id' => $tournament->id]
+        ]
     ];
 } else {
     $this->params['breadcrumbs'][] = [
         'label' => 'Tournament Dates',
-        'url'   => ['tournament-date/index']
+        'url'   => ['tournament-date/index'],
+        'data'  => ['method' => 'post']
     ];
 }
-if (&& $tournament_date !== null) {
+if ($tournament_date !== null) {
     $this->params['breadcrumbs'][] = [
         'label' => $tournament_date->name,
-        'url'   => ['tournament-date/view', 'id' => $tournament_date->id]
+        'url'   => ['tournament-date/view'],
+        'data'  => [
+            'method' => 'post',
+            'params' => ['id' => $tournament_date->id]
+        ]
     ]; 
     $this->params['breadcrumbs'][] = [
         'label' => 'Fixtures',
-        'url'   => ['index', 'tournament_date_id' => $tournament_date->id]
+        'url'   => ['index'],
+        'data'  => [
+            'method' => 'post',
+            'params' => ['tournament_date_id' => $tournament_date->id]
+        ]
     ];
 } else {
     $this->params['breadcrumbs'][] = [
         'label' => 'Fixtures',
-        'url'   => ['index']
+        'url'   => ['index'],
+        'data'  => ['method' => 'post']
     ];
 }
 $this->params['breadcrumbs'][] = $formTitle;

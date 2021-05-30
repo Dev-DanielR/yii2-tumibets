@@ -9,35 +9,58 @@ use yii\grid\GridView;
 /* @var $dataProvider     yii\data\ActiveDataProvider */
 
 $this->title = 'Fixtures';
-if ($tournament !== null && $tournament_date !== null) {
-    $this->params['breadcrumbs'][] = [
-        'label' => 'Tournaments',
-        'url'   => ['tournament/index']
-    ];
+$this->params['breadcrumbs'][] = [
+    'label' => 'Tournaments',
+    'url'   => ['tournament/index'],
+    'data'  => ['method' => 'post']
+];
+if ($tournament !== null) {
     $this->params['breadcrumbs'][] = [
         'label' => $tournament->name,
-        'url'   => ['tournament/view', 'id' => $tournament->id]
+        'url'   => ['tournament/view'],
+        'data'  => [
+            'method' => 'post',
+            'params' => ['id' => $tournament->id]
+        ]
     ];
     $this->params['breadcrumbs'][] = [
         'label' => 'Tournament Dates',
-        'url'   => ['tournament-date/index', 'tournament_id' => $tournament_date->tournament_id]
+        'url'   => ['tournament/index'],
+        'data'  => [
+            'method' => 'post',
+            'params' => ['tournament_id' => $tournament->id]
+        ]
     ];
+} else {
+    $this->params['breadcrumbs'][] = [
+        'label' => 'Tournament Dates',
+        'url'   => ['tournament-date/index'],
+        'data'  => ['method' => 'post']
+    ];
+}
+if ($tournament_date !== null) {
     $this->params['breadcrumbs'][] = [
         'label' => $tournament_date->name,
-        'url'   => ['tournament-date/view', 'id' => $tournament_date->id]
-    ];
+        'url'   => ['tournament-date/view'],
+        'data'  => [
+            'method' => 'post',
+            'params' => ['id' => $tournament_date->id]
+        ]
+    ]; 
 }
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="fixture-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <p><?= Html::a('Create Fixture',
-        ($tournament_date !== null)
-            ? ['create', 'tournament_date_id' => $tournament_date->id]
-            : ['create'],
-        ['class' => 'btn btn-success']
-    ) ?></p>
+    <p><?= Html::a('Create Fixture', ['create'], [
+        'class' => 'btn btn-success',
+        'data'  => [
+            'method' => 'post',
+            'params' => ($tournament_date !== null) ? ['tournament_date_id' => $tournament_date->id] : []
+        ]
+    ]) ?></p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
@@ -77,6 +100,16 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class'    => 'yii\grid\ActionColumn',
                 'template' => '{view}',
+                'buttons'  => [
+                    'view' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',
+                            ['view'], ['title' => 'View', 'data' => [ 
+                                'method' => 'post',
+                                'params' => ['id' => $model->id]
+                            ]]
+                        );
+                    }
+                ]
             ]
         ],
     ]); ?>

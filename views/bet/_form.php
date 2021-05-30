@@ -2,27 +2,45 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\Arrayhelper;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Bet */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $this       yii\web\View */
+/* @var $formTitle  String */
+/* @var $actionName String */
+/* @var $bet        app\models\Bet */
+/* @var $fixtures   app\models\Fixture[] */
+/* @var $form       yii\widgets\ActiveForm */
+
+$this->params['breadcrumbs'][] = [
+    'label' => 'Bets',
+    'url'   => ['index'],
+    'data'  => ['method' => 'post']
+];
+$this->params['breadcrumbs'][] = $formTitle;
+$this->title = $formTitle;
 ?>
 
-<div class="bet-form">
+<div class="bet-<?= $actionName ?>">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <h1><?= Html::encode($formTitle) ?></h1>
+    <div class="bet-form">
 
-    <?= $form->field($model, 'fixture_id')->textInput() ?>
-    <?= $form->field($model, 'user_id')->textInput() ?>
-    <?= $form->field($model, 'teamA_score')->textInput() ?>
-    <?= $form->field($model, 'teamB_score')->textInput() ?>
-    <?= $form->field($model, 'bet_score')->textInput() ?>
-    <?= $form->field($model, 'is_active')->checkbox() ?>
+        <?php $form = ActiveForm::begin(); ?>
 
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= $form->field($bet, 'fixture_id')->dropDownList(
+            ArrayHelper::map($fixtures, "id", "name"), ['prompt' => 'Select Fixture']) ?>
+        <?= $form->field($bet, 'user_id')->textInput() ?>
+        <?= $form->field($bet, 'teamA_score')->textInput() ?>
+        <?= $form->field($bet, 'teamB_score')->textInput() ?>
+        <?= $form->field($bet, 'bet_score')->textInput() ?>
+        <?= $form->field($bet, 'is_active')->checkbox() ?>
+
+        <div class="form-group">
+            <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        </div>
+
+        <?php ActiveForm::end(); ?>
+
     </div>
-
-    <?php ActiveForm::end(); ?>
 
 </div>

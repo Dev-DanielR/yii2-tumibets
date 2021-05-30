@@ -33,7 +33,11 @@ class UserController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'index'  => ['POST'],
+                    'view'   => ['POST'],
+                    'create' => ['POST'],
+                    'update' => ['POST'],
+                    'delete' => ['POST']
                 ],
             ],
         ];
@@ -55,12 +59,12 @@ class UserController extends Controller
 
     /**
      * Displays a single User model.
-     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView()
     {
+        $id = Yii::$app->request->post('id');
         return $this->render('view', ['model' => $this->findModel($id)]);
     }
 
@@ -82,12 +86,12 @@ class UserController extends Controller
     /**
      * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate()
     {
+        $id    = Yii::$app->request->post('id');
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', "User updated successfully.");
@@ -103,8 +107,9 @@ class UserController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete()
     {
+        $id = Yii::$app->request->post('id');
         $this->findModel($id)->delete();
         Yii::$app->session->setFlash('success', "User deleted successfully.");
         return $this->redirect(['index']);

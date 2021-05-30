@@ -8,28 +8,38 @@ use yii\widgets\DetailView;
 /* @var $tournament_date app\models\TournamentDate */
 
 $this->title = $tournament_date->name;
+$this->params['breadcrumbs'][] = [
+    'label' => 'Tournaments',
+    'url'   => ['tournament/index'],
+    'data'  => ['method' => 'post']
+];
 if  ($tournament !== null) {
     $this->params['breadcrumbs'][] = [
-        'label' => 'Tournaments',
-        'url'   => ['tournament/index']
-    ];
-    $this->params['breadcrumbs'][] = [
         'label' => $tournament->name,
-        'url'   => ['tournament/view', 'id' => $tournament->id]
+        'url'   => ['tournament/view'],
+        'data'  => [
+            'method' => 'post',
+            'params' => ['id' => $tournament->id]
+        ]
     ];
     $this->params['breadcrumbs'][] = [
         'label' => 'Tournament Dates',
-        'url'   => ['index', 'tournament_id' => $tournament->id]
+        'url'   => ['index'],
+        'data'  => [
+            'method' => 'post',
+            'params' => ['tournament_id' => $tournament->id]
+        ]
     ];
 } else {
     $this->params['breadcrumbs'][] = [
         'label' => 'Tournament Dates',
-        'url'   => ['index']
+        'url'   => ['index'],
+        'data'  => ['method' => 'post']
     ];
 }
 $this->params['breadcrumbs'][] = $this->title;
-// \yii\web\YiiAsset::register($this);
 ?>
+
 <div class="tournament-date-view">
 
     <h1><?= Html::encode($this->title) ?></h1>

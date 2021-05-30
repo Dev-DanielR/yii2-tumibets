@@ -9,53 +9,77 @@ use yii\widgets\DetailView;
 /* @var $fixture         app\models\Fixture */
 
 $this->title = $fixture->teamA->name . ' vs ' . $fixture->teamB->name;
+$this->params['breadcrumbs'][] = [
+    'label' => 'Tournaments',
+    'url'   => ['tournament/index'],
+    'data'  => ['method' => 'post']
+];
 if ($tournament !== null) {
     $this->params['breadcrumbs'][] = [
-        'label' => 'Tournaments',
-        'url'   => ['tournament/index']
-    ];
-    $this->params['breadcrumbs'][] = [
         'label' => $tournament->name,
-        'url'   => ['tournament/view', 'id' => $tournament->id]
+        'url'   => ['tournament/view'],
+        'data'  => [
+            'method' => 'post',
+            'params' => ['id' => $tournament->id]
+        ]
     ];
     $this->params['breadcrumbs'][] = [
         'label' => 'Tournament Dates',
-        'url'   => ['tournament-date/index', 'tournament_id' => $tournament->id]
+        'url'   => ['tournament/index'],
+        'data'  => [
+            'method' => 'post',
+            'params' => ['tournament_id' => $tournament->id]
+        ]
     ];
 } else {
     $this->params['breadcrumbs'][] = [
         'label' => 'Tournament Dates',
-        'url'   => ['tournament-date/index']
+        'url'   => ['tournament-date/index'],
+        'data'  => ['method' => 'post']
     ];
 }
-if (&& $tournament_date !== null) {
+if ($tournament_date !== null) {
     $this->params['breadcrumbs'][] = [
         'label' => $tournament_date->name,
-        'url'   => ['tournament-date/view', 'id' => $tournament_date->id]
+        'url'   => ['tournament-date/view'],
+        'data'  => [
+            'method' => 'post',
+            'params' => ['id' => $tournament_date->id]
+        ]
     ]; 
     $this->params['breadcrumbs'][] = [
         'label' => 'Fixtures',
-        'url'   => ['index', 'tournament_date_id' => $tournament_date->id]
+        'url'   => ['index'],
+        'data'  => [
+            'method' => 'post',
+            'params' => ['tournament_date_id' => $tournament_date->id]
+        ]
     ];
 } else {
     $this->params['breadcrumbs'][] = [
         'label' => 'Fixtures',
-        'url'   => ['index']
+        'url'   => ['index'],
+        'data'  => ['method' => 'post']
     ];
 }
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
 ?>
+
 <div class="fixture-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
-        <?= Html::a('Update', ['update', 'id' => $fixture->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $fixture->id], [
-            'class' => 'btn btn-danger',
+        <?= Html::a('Update', ['update'], ['class' => 'btn btn-primary',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
                 'method' => 'post',
+                'params' => ['id' => $fixture->id]
+            ]
+        ]) ?>
+        <?= Html::a('Delete', ['delete'], ['class' => 'btn btn-danger',
+            'data' => [
+                'method'  => 'post',
+                'confirm' => 'Are you sure you want to delete this item?',
+                'params'  => ['id' => $fixture->id]
             ],
         ]) ?>
     </p>
