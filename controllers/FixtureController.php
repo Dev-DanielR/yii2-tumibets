@@ -96,8 +96,8 @@ class FixtureController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model        = $this->findModel($id);
-        return $this->helperForm($model, 'update', 'Update Tournament Date: ' . $model->name);
+        $model = $this->findModel($id);
+        return $this->helperForm($model, 'update', 'Update Fixture: ' . $model->teamA->name . ' vs ' . $model->teamB->name);
     }
 
     /**
@@ -193,7 +193,7 @@ class FixtureController extends Controller
         $dependencies = $this->findDependencyModels($model->tournament_date_id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', "Fixture created successfully.");
+            Yii::$app->session->setFlash('success', "Fixture " . $actionName . "d successfully.");
             return $this->redirect(['index']);
         }
 

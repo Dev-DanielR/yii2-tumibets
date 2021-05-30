@@ -31,6 +31,7 @@ if ($tournament !== null) {
     ];
 }
 $this->params['breadcrumbs'][] = $formTitle;
+$this->title = $formTitle;
 ?>
 
 <div class="tournament-date-<?= $actionName ?>">

@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Arrayhelper;
+use dosamigos\datetimepicker\DateTimePicker;
 
 /* @var $this             yii\web\View */
 /* @var $formTitle        String */
@@ -42,6 +43,7 @@ if ($tournament !== null && $tournament_date !== null) {
     ];
 }
 $this->params['breadcrumbs'][] = $formTitle;
+$this->title = $formTitle;
 ?>
 
 <div class="fixture-<?= $actionName ?>">
@@ -54,10 +56,34 @@ $this->params['breadcrumbs'][] = $formTitle;
         <?= $form->field($fixture, 'tournament_date_id')->dropDownList(ArrayHelper::map($tournament_dates, "id", "name"), ['prompt' => 'Select Tournament Date']) ?>
         <?= $form->field($fixture, 'teamA_id')->dropDownList(ArrayHelper::map($teams, "id", "name"), ['prompt' => 'Select Team']) ?>
         <?= $form->field($fixture, 'teamB_id')->dropDownList(ArrayHelper::map($teams, "id", "name"), ['prompt' => 'Select Team']) ?>
-        <?= $form->field($fixture, 'teamA_score')->textInput() ?>
-        <?= $form->field($fixture, 'teamB_score')->textInput() ?>
-        <?= $form->field($fixture, 'start')->textInput() ?>
-        <?= $form->field($fixture, 'end')->textInput() ?>
+        <?php if($actionName != 'create') echo $form->field($fixture, 'teamA_score')->textInput() ?>
+        <?php if($actionName != 'create') echo $form->field($fixture, 'teamB_score')->textInput() ?>
+        <?= $form->field($fixture, 'start')->widget(DateTimePicker::className(), [
+            'size'           => 'ms',
+            'template'       => '{addon}{input}',
+            'pickButtonIcon' => 'glyphicon glyphicon-time',
+            'clientOptions'  => [
+                'startView'  => 1,
+                'minView'    => 0,
+                'maxView'    => 3,
+                'autoclose'  => true,
+                'format'     => 'dd\mm\yy HH:ii P',
+                'todayBtn'   => true
+            ]
+        ]) ?>
+        <?= $form->field($fixture, 'end')->widget(DateTimePicker::className(), [
+            'size'           => 'ms',
+            'template'       => '{addon}{input}',
+            'pickButtonIcon' => 'glyphicon glyphicon-time',
+            'clientOptions'  => [
+                'startView'  => 1,
+                'minView'    => 0,
+                'maxView'    => 3,
+                'autoclose'  => true,
+                'format'     => 'dd\mm\yy HH:ii P',
+                'todayBtn'   => true
+            ]
+        ]) ?>
         <?= $form->field($fixture, 'is_active')->checkbox() ?>
 
         <div class="form-group">

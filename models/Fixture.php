@@ -67,6 +67,21 @@ class Fixture extends \yii\db\ActiveRecord
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) return false;
+
+        $this->start = date("Y-m-d H:i:s", strtotime(str_replace('/', '-', $this->start)));
+        $this->end   = date("Y-m-d H:i:s", strtotime(str_replace('/', '-', $this->end)));
+
+        echo 'Start datetime: ' . $this->start . '\n';
+        echo 'End datetime:   ' . $this->end . '\n';
+        return true;
+    }
+
+    /**
      * Gets query for [[Bets]].
      *
      * @return \yii\db\ActiveQuery

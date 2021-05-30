@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $tournament       app\models\Tournament */
-/* @var $tournament_date  app\models\TournamentDate */
-/* @var $fixture          app\models\Fixture */
+/* @var $tournament      app\models\Tournament */
+/* @var $tournament_date app\models\TournamentDate */
+/* @var $fixture         app\models\Fixture */
 
-$this->title = $fixture->id;
+$this->title = $fixture->teamA->name . ' vs ' . $fixture->teamB->name;
 if ($tournament !== null && $tournament_date !== null) {
     $this->params['breadcrumbs'][] = [
         'label' => 'Tournaments',
@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             [
                 'attribute' => 'tournament_date_id',
-                'value'     => function ($fixture) { return $fixture->tournamentDate->name; }
+                'value'     => $fixture->tournamentDate->name
             ],
             [
                 'attribute' => 'teamA_id',
@@ -82,8 +82,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'teamA_score',
             'teamB_score',
-            'start:datetime',
-            'end:datetime',
+            'start',
+            'end',
             'is_active:boolean',
         ],
     ]) ?>
