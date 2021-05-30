@@ -48,6 +48,12 @@ $config = [
             'showScriptName' => false,
             'rules' => [
             ],
+        ],
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'dateFormat'     => 'php:d/m/y',
+            'datetimeFormat' => 'php:d/m/y h:i A',
+            'timeFormat'     => 'php:h:i A',
         ]
     ],
     'params' => $params,

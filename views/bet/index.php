@@ -26,8 +26,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'teamB_score',
             'bet_score',
             'is_active:boolean',
-            'created',
-            'updated',
+            'created:datetime',
+            'updated:datetime',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $model->id;
             'cellphone',
             'is_validated:boolean',
             'is_active:boolean',
-            'created',
+            'created:datetime',
         ],
     ]) ?>
 

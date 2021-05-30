@@ -9,7 +9,7 @@ use yii\widgets\DetailView;
 /* @var $fixture         app\models\Fixture */
 
 $this->title = $fixture->teamA->name . ' vs ' . $fixture->teamB->name;
-if ($tournament !== null && $tournament_date !== null) {
+if ($tournament !== null) {
     $this->params['breadcrumbs'][] = [
         'label' => 'Tournaments',
         'url'   => ['tournament/index']
@@ -22,6 +22,13 @@ if ($tournament !== null && $tournament_date !== null) {
         'label' => 'Tournament Dates',
         'url'   => ['tournament-date/index', 'tournament_id' => $tournament->id]
     ];
+} else {
+    $this->params['breadcrumbs'][] = [
+        'label' => 'Tournament Dates',
+        'url'   => ['tournament-date/index']
+    ];
+}
+if (&& $tournament_date !== null) {
     $this->params['breadcrumbs'][] = [
         'label' => $tournament_date->name,
         'url'   => ['tournament-date/view', 'id' => $tournament_date->id]
@@ -32,7 +39,7 @@ if ($tournament !== null && $tournament_date !== null) {
     ];
 } else {
     $this->params['breadcrumbs'][] = [
-        'label' => 'Tournament Dates',
+        'label' => 'Fixtures',
         'url'   => ['index']
     ];
 }
@@ -82,8 +89,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'teamA_score',
             'teamB_score',
-            'start',
-            'end',
+            'start:datetime',
+            'end:datetime',
             'is_active:boolean',
         ],
     ]) ?>

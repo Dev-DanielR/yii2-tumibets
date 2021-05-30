@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'cellphone',
             'is_validated:boolean',
             'is_active:boolean',
-            'created',
+            'created:datetime',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

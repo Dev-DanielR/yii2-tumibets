@@ -15,7 +15,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 /* @var $teams            app\models\Team[] */
 /* @var $form             yii\widgets\ActiveForm */
 
-if ($tournament !== null && $tournament_date !== null) {
+if ($tournament !== null) {
     $this->params['breadcrumbs'][] = [
         'label' => 'Tournaments',
         'url'   => ['tournament/index']
@@ -28,6 +28,13 @@ if ($tournament !== null && $tournament_date !== null) {
         'label' => 'Tournament Dates',
         'url'   => ['tournament-date/index', 'tournament_id' => $tournament->id]
     ];
+} else {
+    $this->params['breadcrumbs'][] = [
+        'label' => 'Tournament Dates',
+        'url'   => ['tournament-date/index']
+    ];
+}
+if (&& $tournament_date !== null) {
     $this->params['breadcrumbs'][] = [
         'label' => $tournament_date->name,
         'url'   => ['tournament-date/view', 'id' => $tournament_date->id]
@@ -38,7 +45,7 @@ if ($tournament !== null && $tournament_date !== null) {
     ];
 } else {
     $this->params['breadcrumbs'][] = [
-        'label' => 'Tournament Dates',
+        'label' => 'Fixtures',
         'url'   => ['index']
     ];
 }
@@ -67,7 +74,7 @@ $this->title = $formTitle;
                 'minView'    => 0,
                 'maxView'    => 3,
                 'autoclose'  => true,
-                'format'     => 'dd\mm\yy HH:ii P',
+                'format'     => 'dd/mm/yy HH:ii P',
                 'todayBtn'   => true
             ]
         ]) ?>
@@ -80,7 +87,7 @@ $this->title = $formTitle;
                 'minView'    => 0,
                 'maxView'    => 3,
                 'autoclose'  => true,
-                'format'     => 'dd\mm\yy HH:ii P',
+                'format'     => 'dd/mm/yy HH:ii P',
                 'todayBtn'   => true
             ]
         ]) ?>
