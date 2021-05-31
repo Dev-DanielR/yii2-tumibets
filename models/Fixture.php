@@ -45,6 +45,8 @@ class Fixture extends \yii\db\ActiveRecord
             [['teamA_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['teamA_id' => 'id']],
             [['teamB_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['teamB_id' => 'id']],
             [['tournament_date_id'], 'exist', 'skipOnError' => true, 'targetClass' => TournamentDate::className(), 'targetAttribute' => ['tournament_date_id' => 'id']],
+            [['teamB_id'], 'differentTeams'],
+            [['end'], 'endLater']
         ];
     }
 
@@ -77,6 +79,26 @@ class Fixture extends \yii\db\ActiveRecord
         $this->end   = date("Y-m-d H:i:s", strtotime(str_replace('/', '.', $this->end)));
 
         return true;
+    }
+
+    /**
+     * Check if teamB is different from teamA.
+     */
+    public function differentTeams(){
+        if (!empty($this->teamA_id) && !empty($this->teamB_id)) {
+            if ($this->teamA_id == $this->teamB_id) $this->addError('teamB_id', 'Teams must be different.');
+        }
+    }
+
+    /**
+     * Check if end is at a later time than start.
+     */
+    public function endLater(){
+        if (!empty($this->start) && !empty($this->end)) {
+            $start_unix = strtotime(str_replace('/', '.', $this->start));
+            $end_unix   = strtotime(str_replace('/', '.', $this->end));
+            if ($start_unix >= $end_unix) $this->addError('end', 'Fixture cannot end before starting.');
+        }
     }
 
     /**
