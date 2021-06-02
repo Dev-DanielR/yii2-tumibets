@@ -34,7 +34,7 @@ class TeamController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'index'  => ['POST'],
+                    'index'  => ['GET', 'POST'],
                     'view'   => ['POST'],
                     'create' => ['POST'],
                     'update' => ['POST'],
