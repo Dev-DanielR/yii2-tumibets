@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "user_sessions".
+ * This is the model class for table "user_session".
  *
  * @property int $id
  * @property int $user_id
@@ -14,7 +14,7 @@ use Yii;
  *
  * @property User $user
  */
-class UserSessions extends \yii\db\ActiveRecord
+class UserSession extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

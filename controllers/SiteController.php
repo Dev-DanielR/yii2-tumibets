@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
+use app\models\UserSession;
 use app\models\ContactForm;
 
 class SiteController extends Controller
@@ -71,13 +72,19 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
+        if (!Yii::$app->user->isGuest) return $this->goHome();
 
-        $model = new LoginForm();
+        $model        = new LoginForm();
+        $sessionModel = new UserSession();
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            $sessionModel->user_id         = Yii::$app->user->identity->id;
+            $sessionModel->login_timestamp = date('Y-m-d H:i:s');
+            if ($sessionModel->save()){
+                Yii::$app->session->setFlash('success', $sessionModel->id);
+                //Yii::$app->session->set('user.session_id', $sessionModel->id);
+                return $this->goBack();
+            }
         }
 
         $model->password = '';
@@ -93,7 +100,15 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        Yii::$app->user->logout();
+        if (Yii::$app->user->logout()){
+            $session_id = Yii::$app->session->get('user.session_id');
+            //Yii::$app->session->setFlash('success', $session_id);
+            /*
+            $sessionModel = UserSession::find()->where(['id' => $session_id])->one();
+            $sessionModel->logout_timestamp = date('Y-m-d H:i:s');
+            if ($sessionModel->save()) Yii::$app->session->set('user.session_id', null);
+            */
+        }
 
         return $this->goHome();
     }
