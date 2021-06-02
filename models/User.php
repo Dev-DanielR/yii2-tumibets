@@ -9,7 +9,7 @@ use yii\web\IdentityInterface;
  * This is the model class for table "user".
  *
  * @property int $id
- * @property string $is_admin
+ * @property bool $is_admin
  * @property string $username
  * @property string $password
  * @property string $main_email
@@ -17,13 +17,24 @@ use yii\web\IdentityInterface;
  * @property string|null $cellphone
  * @property string $authKey
  * @property string $accessToken
- * @property string $is_validated
- * @property string $is_active
+ * @property bool $is_validated
+ * @property bool $is_active
  * @property string $created
  *
  * @property Bet[] $bets
+ * @property Bet[] $betsCreated
+ * @property Bet[] $betsUpdated
+ * @property Fixture[] $fixturesCreated
+ * @property Fixture[] $fixturesUpdated
+ * @property Team[] $teamsCreated
+ * @property Team[] $teamsUpdated
+ * @property Tournament[] $tournamentsCreated
+ * @property Tournament[] $tournamentsUpdated
+ * @property TournamentDate[] $tournamentDatesCreated
+ * @property TournamentDate[] $tournamentDatesUpdated
+ * @property UserSession[] $userSessions
  */
-class User extends \yii\db\ActiveRecord implements IdentityInterface
+class User extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -39,15 +50,13 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['id', 'username', 'password', 'main_email', 'authKey', 'accessToken'], 'required'],
-            [['id'], 'integer'],
+            [['is_admin', 'is_validated', 'is_active'], 'boolean'],
+            [['username', 'password', 'main_email', 'authKey', 'accessToken'], 'required'],
             [['created'], 'safe'],
-            [['is_admin', 'is_validated', 'is_active'], 'string', 'max' => 3],
             [['username', 'password', 'main_email', 'backup_email'], 'string', 'max' => 32],
             [['cellphone'], 'string', 'max' => 16],
             [['authKey', 'accessToken'], 'string', 'max' => 64],
             [['username'], 'unique'],
-            [['id'], 'unique'],
         ];
     }
 
@@ -139,11 +148,12 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function beforeSave($insert)
     {
+        if (!parent::beforeSave($insert)) return false;
         if ($insert) {
-            $this->authKey = $this->generateString();
+            $this->authKey     = $this->generateString();
             $this->accessToken = $this->generateString();
         }
-        return parent::beforeSave($insert);
+        return true;
     }
 
     /**
@@ -171,5 +181,115 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function getBets()
     {
         return $this->hasMany(Bet::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Bets]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBetsCreated()
+    {
+        return $this->hasMany(Bet::className(), ['user_created' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Bets]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBetsUpdated()
+    {
+        return $this->hasMany(Bet::className(), ['user_updated' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Fixtures]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFixturesCreated()
+    {
+        return $this->hasMany(Fixture::className(), ['user_created' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Fixtures]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFixturesUpdated()
+    {
+        return $this->hasMany(Fixture::className(), ['user_updated' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Teams]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTeamsCreated()
+    {
+        return $this->hasMany(Team::className(), ['user_created' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Teams]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTeamsUpdated()
+    {
+        return $this->hasMany(Team::className(), ['user_updated' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Tournaments]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTournamentsCreated()
+    {
+        return $this->hasMany(Tournament::className(), ['user_created' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Tournaments]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTournamentsUpdated()
+    {
+        return $this->hasMany(Tournament::className(), ['user_updated' => 'id']);
+    }
+
+    /**
+     * Gets query for [[TournamentDates]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTournamentDatesCreated()
+    {
+        return $this->hasMany(TournamentDate::className(), ['user_created' => 'id']);
+    }
+
+    /**
+     * Gets query for [[TournamentDates]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTournamentDatesUpdated()
+    {
+        return $this->hasMany(TournamentDate::className(), ['user_updated' => 'id']);
+    }
+
+    /**
+     * Gets query for [[UserSessions]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserSessions()
+    {
+        return $this->hasMany(UserSession::className(), ['user_id' => 'id']);
     }
 }

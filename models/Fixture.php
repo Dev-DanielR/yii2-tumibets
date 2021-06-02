@@ -13,14 +13,20 @@ use Yii;
  * @property int $teamB_id
  * @property int $teamA_score
  * @property int $teamB_score
- * @property string $start
+ * @property string|null $start
  * @property string|null $end
  * @property bool $is_active
+ * @property int $user_created
+ * @property string $time_created
+ * @property int|null $user_updated
+ * @property string|null $time_updated
  *
  * @property Bet[] $bets
  * @property Team $teamA
  * @property Team $teamB
  * @property TournamentDate $tournamentDate
+ * @property User $userCreated
+ * @property User $userUpdated
  */
 class Fixture extends \yii\db\ActiveRecord
 {
@@ -38,15 +44,15 @@ class Fixture extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tournament_date_id', 'teamA_id', 'teamB_id'], 'required'],
-            [['tournament_date_id', 'teamA_id', 'teamB_id', 'teamA_score', 'teamB_score'], 'integer'],
-            [['start', 'end'], 'safe'],
+            [['tournament_date_id', 'teamA_id', 'teamB_id', 'user_created'], 'required'],
+            [['tournament_date_id', 'teamA_id', 'teamB_id', 'teamA_score', 'teamB_score', 'user_created', 'user_updated'], 'integer'],
+            [['start', 'end', 'time_created', 'time_updated'], 'safe'],
             [['is_active'], 'boolean'],
             [['teamA_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['teamA_id' => 'id']],
             [['teamB_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['teamB_id' => 'id']],
             [['tournament_date_id'], 'exist', 'skipOnError' => true, 'targetClass' => TournamentDate::className(), 'targetAttribute' => ['tournament_date_id' => 'id']],
-            [['teamB_id'], 'differentTeams'],
-            [['end'], 'endLater']
+            [['user_created'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_created' => 'id']],
+            [['user_updated'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_updated' => 'id']],
         ];
     }
 
@@ -65,40 +71,27 @@ class Fixture extends \yii\db\ActiveRecord
             'start'              => 'Start',
             'end'                => 'End',
             'is_active'          => 'Is Active',
+            'user_created'       => 'User Created',
+            'time_created'       => 'Time Created',
+            'user_updated'       => 'User Updated',
+            'time_updated'       => 'Time Updated',
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function beforeSave($insert)
     {
         if (!parent::beforeSave($insert)) return false;
-
-        $this->start = date("Y-m-d H:i:s", strtotime(str_replace('/', '.', $this->start)));
-        $this->end   = date("Y-m-d H:i:s", strtotime(str_replace('/', '.', $this->end)));
-
+        if ($insert) {
+            $this->user_created = Yii::$app->user->identity->id;
+            $this->time_created = date('Y-m-d H:i:s');
+        } else {
+            $this->user_updated = Yii::$app->user->identity->id;
+            $this->time_updated = date('Y-m-d H:i:s');
+        }
         return true;
-    }
-
-    /**
-     * Check if teamB is different from teamA.
-     */
-    public function differentTeams(){
-        if (!empty($this->teamA_id) && !empty($this->teamB_id)) {
-            if ($this->teamA_id == $this->teamB_id) $this->addError('teamB_id', 'Teams must be different.');
-        }
-    }
-
-    /**
-     * Check if end is at a later time than start.
-     */
-    public function endLater(){
-        if (!empty($this->start) && !empty($this->end)) {
-            $start_unix = strtotime(str_replace('/', '.', $this->start));
-            $end_unix   = strtotime(str_replace('/', '.', $this->end));
-            if ($start_unix >= $end_unix) $this->addError('end', 'Fixture cannot end before starting.');
-        }
     }
 
     /**
@@ -139,5 +132,25 @@ class Fixture extends \yii\db\ActiveRecord
     public function getTournamentDate()
     {
         return $this->hasOne(TournamentDate::className(), ['id' => 'tournament_date_id']);
+    }
+
+    /**
+     * Gets query for [[UserCreated]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserCreated()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_created']);
+    }
+
+    /**
+     * Gets query for [[UserUpdated]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserUpdated()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_updated']);
     }
 }
