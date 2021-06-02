@@ -34,7 +34,7 @@ use yii\web\IdentityInterface;
  * @property TournamentDate[] $tournamentDatesUpdated
  * @property UserSession[] $userSessions
  */
-class User extends \yii\db\ActiveRecord
+class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
     /**
      * {@inheritdoc}
