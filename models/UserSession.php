@@ -14,6 +14,7 @@ use Yii;
  *
  * @property User $user
  */
+
 class UserSession extends \yii\db\ActiveRecord
 {
     /**

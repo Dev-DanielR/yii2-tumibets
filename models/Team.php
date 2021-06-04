@@ -22,6 +22,8 @@ use Yii;
  */
 class Team extends \yii\db\ActiveRecord
 {
+    public $image;
+
     /**
      * {@inheritdoc}
      */
@@ -36,12 +38,12 @@ class Team extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'user_created'], 'required'],
+            [['name'], 'required'],
             [['is_active'], 'boolean'],
             [['user_created', 'user_updated'], 'integer'],
             [['time_created', 'time_updated'], 'safe'],
             [['name'], 'string', 'max' => 64],
-            [['image_path'], 'string', 'max' => 256],
+            [['image'], 'file', 'extensions' => 'png'],
             [['name'], 'unique'],
             [['user_created'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_created' => 'id']],
             [['user_updated'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_updated' => 'id']],
@@ -71,13 +73,8 @@ class Team extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if (!parent::beforeSave($insert)) return false;
-        if ($insert) {
-            $this->user_created = Yii::$app->user->identity->id;
-            $this->time_created = date('Y-m-d H:i:s');
-        } else {
-            $this->user_updated = Yii::$app->user->identity->id;
-            $this->time_updated = date('Y-m-d H:i:s');
-        }
+        if ($insert) $this->user_created = Yii::$app->user->identity->id;
+        else $this->user_updated = Yii::$app->user->identity->id;
         return true;
     }
 

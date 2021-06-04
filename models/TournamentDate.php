@@ -37,7 +37,7 @@ class TournamentDate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tournament_id', 'user_created'], 'required'],
+            [['tournament_id'], 'required'],
             [['tournament_id', 'user_created', 'user_updated'], 'integer'],
             [['is_active'], 'boolean'],
             [['time_created', 'time_updated'], 'safe'],
@@ -71,13 +71,8 @@ class TournamentDate extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if (!parent::beforeSave($insert)) return false;
-        if ($insert) {
-            $this->user_created = Yii::$app->user->identity->id;
-            $this->time_created = date('Y-m-d H:i:s');
-        } else {
-            $this->user_updated = Yii::$app->user->identity->id;
-            $this->time_updated = date('Y-m-d H:i:s');
-        }
+        if ($insert) $this->user_created = Yii::$app->user->identity->id;
+        else $this->user_updated = Yii::$app->user->identity->id;
         return true;
     }
 

@@ -30,6 +30,9 @@ use Yii;
  */
 class Fixture extends \yii\db\ActiveRecord
 {
+    protected $DB_format = 'Y-m-d H:i:s';
+    protected $read_format = 'd/m/y h:i A';
+
     /**
      * {@inheritdoc}
      */
@@ -44,7 +47,7 @@ class Fixture extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tournament_date_id', 'teamA_id', 'teamB_id', 'user_created'], 'required'],
+            [['tournament_date_id', 'teamA_id', 'teamB_id'], 'required'],
             [['tournament_date_id', 'teamA_id', 'teamB_id', 'teamA_score', 'teamB_score', 'user_created', 'user_updated'], 'integer'],
             [['start', 'end', 'time_created', 'time_updated'], 'safe'],
             [['is_active'], 'boolean'],
@@ -84,14 +87,48 @@ class Fixture extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if (!parent::beforeSave($insert)) return false;
-        if ($insert) {
-            $this->user_created = Yii::$app->user->identity->id;
-            $this->time_created = date('Y-m-d H:i:s');
-        } else {
-            $this->user_updated = Yii::$app->user->identity->id;
-            $this->time_updated = date('Y-m-d H:i:s');
-        }
+        if ($insert) $this->user_created = Yii::$app->user->identity->id;
+        else $this->user_updated = Yii::$app->user->identity->id;
+        $this->datesToDBFormat();
         return true;
+    }
+
+    /**
+     * Converts dates to db format.
+     */
+    protected function datesToDBFormat()
+    {
+        $this->start = date($this->DB_format,
+            date_create_from_format(
+                $this->read_format,
+                $this->start
+            )->getTimestamp()
+        );
+        $this->end = date($this->DB_format,
+            date_create_from_format(
+                $this->read_format,
+                $this->end
+            )->getTimestamp()
+        );
+    }
+
+    /**
+     * Converts dates to read format.
+     */
+    public function datesToReadFormat()
+    {
+        $this->start = date($this->read_format,
+            date_create_from_format(
+                $this->DB_format,
+                $this->start
+            )->getTimestamp()
+        );
+        $this->end = date($this->read_format,
+            date_create_from_format(
+                $this->DB_format,
+                $this->end
+            )->getTimestamp()
+        );
     }
 
     /**
