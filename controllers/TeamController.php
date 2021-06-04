@@ -50,7 +50,7 @@ class TeamController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = $this->search(Yii::$app->request->queryParams);
+        $dataProvider = $this->search(Yii::$app->request->post());
         return $this->render('index', ['dataProvider' => $dataProvider]);
     }
 
@@ -127,8 +127,8 @@ class TeamController extends Controller
         $query        = Team::find();
         $dataProvider = new ActiveDataProvider(['query' => $query]);
         $query->andFilterWhere([
-            'id'        => $params['id']            ?? null,
-            'is_active' => $params['is_active']     ?? null,
+            'id'        => $params['id']        ?? null,
+            'is_active' => $params['is_active'] ?? null,
         ],['like', 'name', $params['name'] ?? null]);
         return $dataProvider;
     }
