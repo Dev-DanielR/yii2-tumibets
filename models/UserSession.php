@@ -44,10 +44,10 @@ class UserSession extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id'               => 'ID',
-            'user_id'          => 'User',
-            'login_timestamp'  => 'Login Timestamp',
-            'logout_timestamp' => 'Logout Timestamp',
+            'id'               => Yii::t('app', 'ID'),
+            'user_id'          => Yii::t('app', 'User'),
+            'login_timestamp'  => Yii::t('app', 'Login Timestamp'),
+            'logout_timestamp' => Yii::t('app', 'Logout Timestamp'),
         ];
     }
 

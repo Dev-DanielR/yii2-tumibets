@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
+use app\models\LanguageForm;
 use app\models\UserSession;
 use app\models\ContactForm;
 
@@ -62,7 +63,12 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = new LanguageForm();
+        $model->selected = Yii::$app->language;
+        if ($model->load(Yii::$app->request->post())) {
+            Yii::$app->language = $model->selected;
+        }
+        return $this->render('index', ['model' => $model]);
     }
 
     /**
@@ -78,19 +84,16 @@ class SiteController extends Controller
         $sessionModel = new UserSession();
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            $sessionModel->user_id         = Yii::$app->user->identity->id;
-            $sessionModel->login_timestamp = date('Y-m-d H:i:s');
+            $sessionModel->user_id = Yii::$app->user->identity->id;
+
             if ($sessionModel->save()){
-                Yii::$app->session->setFlash('success', $sessionModel->id);
-                //Yii::$app->session->set('user.session_id', $sessionModel->id);
+                Yii::$app->session->set('user.session_id', $sessionModel->id);
                 return $this->goBack();
             }
         }
 
         $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
+        return $this->render('login', ['model' => $model]);
     }
 
     /**
@@ -100,14 +103,11 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        if (Yii::$app->user->logout()){
-            $session_id = Yii::$app->session->get('user.session_id');
-            //Yii::$app->session->setFlash('success', $session_id);
-            /*
+        $session_id = Yii::$app->session->get('user.session_id');
+        if (Yii::$app->user->logout()) {
             $sessionModel = UserSession::find()->where(['id' => $session_id])->one();
             $sessionModel->logout_timestamp = date('Y-m-d H:i:s');
             if ($sessionModel->save()) Yii::$app->session->set('user.session_id', null);
-            */
         }
 
         return $this->goHome();
@@ -126,9 +126,7 @@ class SiteController extends Controller
 
             return $this->refresh();
         }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
+        return $this->render('contact', ['model' => $model]);
     }
 
     /**

@@ -65,19 +65,19 @@ class Fixture extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id'                 => 'ID',
-            'tournament_date_id' => 'Tournament Date',
-            'teamA_id'           => 'Team A',
-            'teamB_id'           => 'Team B',
-            'teamA_score'        => 'Team A Score',
-            'teamB_score'        => 'Team B Score',
-            'start'              => 'Start',
-            'end'                => 'End',
-            'is_active'          => 'Is Active',
-            'user_created'       => 'User Created',
-            'time_created'       => 'Time Created',
-            'user_updated'       => 'User Updated',
-            'time_updated'       => 'Time Updated',
+            'id'                 => Yii::t('app', 'ID'),
+            'tournament_date_id' => Yii::t('app', 'Tournament Date'),
+            'teamA_id'           => Yii::t('app', 'Team A'),
+            'teamB_id'           => Yii::t('app', 'Team B'),
+            'teamA_score'        => Yii::t('app', 'Team A Score'),
+            'teamB_score'        => Yii::t('app', 'Team B Score'),
+            'start'              => Yii::t('app', 'Start Time'),
+            'end'                => Yii::t('app', 'End Time'),
+            'is_active'          => Yii::t('app', 'Is Active'),
+            'user_created'       => Yii::t('app', 'User Created'),
+            'time_created'       => Yii::t('app', 'Time Created'),
+            'user_updated'       => Yii::t('app', 'User Updated'),
+            'time_updated'       => Yii::t('app', 'Time Updated'),
         ];
     }
 

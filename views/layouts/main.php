@@ -29,7 +29,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => Yii::t('app', 'TumiBets'),
         'brandUrl'   => Yii::$app->homeUrl,
         'options'    => ['class' => 'navbar-inverse navbar-fixed-top'],
     ]);

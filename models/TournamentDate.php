@@ -54,14 +54,14 @@ class TournamentDate extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id'            => 'ID',
-            'tournament_id' => 'Tournament',
-            'name'          => 'Name',
-            'is_active'     => 'Is Active',
-            'user_created'  => 'User Created',
-            'time_created'  => 'Time Created',
-            'user_updated'  => 'User Updated',
-            'time_updated'  => 'Time Updated',
+            'id'            => Yii::t('app', 'ID'),
+            'tournament_id' => Yii::t('app', 'Tournament'),
+            'name'          => Yii::t('app', 'Name'),
+            'is_active'     => Yii::t('app', 'Is Active'),
+            'user_created'  => Yii::t('app', 'User Created'),
+            'time_created'  => Yii::t('app', 'Time Created'),
+            'user_updated'  => Yii::t('app', 'User Updated'),
+            'time_updated'  => Yii::t('app', 'Time Updated'),
         ];
     }
 

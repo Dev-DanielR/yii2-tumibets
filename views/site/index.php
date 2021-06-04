@@ -1,16 +1,25 @@
 <?php
 
-/* @var $this yii\web\View */
+use yii\helpers\Html;
+use yii\bootstrap\ActiveForm;
+
+/* @var $this  yii\web\View */
+/* @var $model app\models\LanguageForm */
 
 $this->title = Yii::t('app', 'TumiBets');
 ?>
 <div class="site-index">
 
+    <?php $form = ActiveForm::begin(['id' => 'language-form', ])?>
+        <?= $form->field($model, 'selected')->dropDownList(
+            $model->locales,
+            ['onchange' => 'this.form.submit()']
+        ); ?>
+    <?php ActiveForm::end() ?>
+
     <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
+        <h1><?= Yii::t('app', 'Congratulations!') ?></h1>
         <p class="lead">You have successfully created your Yii-powered application.</p>
-
         <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
     </div>
 
