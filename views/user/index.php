@@ -13,11 +13,13 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="user-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <p><?= Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?></p>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <p><?= Html::a('Create User', ['create'], [
+        'class' => 'btn btn-success',
+        'data'  => ['method' => 'post']
+    ]) ?></p>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'columns' => [
             'id',
             'is_admin:boolean',

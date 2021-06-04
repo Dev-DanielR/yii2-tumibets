@@ -3,9 +3,9 @@
 namespace app\controllers;
 
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use app\models\User;
-use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -49,12 +49,8 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new UserSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        $dataProvider = $this->search(Yii::$app->request->post());
+        return $this->render('index', ['dataProvider' => $dataProvider]);
     }
 
     /**
@@ -126,5 +122,29 @@ class UserController extends Controller
     {
         if (($model = User::findOne($id)) !== null) return $model;
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * Creates data provider instance with search query applied
+     * @param array $params
+     * @return ActiveDataProvider
+     */
+    protected function search($params)
+    {
+        $query        = User::find();
+        $dataProvider = new ActiveDataProvider(['query' => $query]);
+        $query->andFilterWhere([
+                'id'           => $params['id']           ?? null,
+                'is_admin'     => $params['is_admin']     ?? null,
+                'cellphone'    => $params['cellphone']    ?? null,
+                'is_validated' => $params['is_validated'] ?? null,
+                'is_active'    => $params['is_active']    ?? null,
+                'created'      => $params['created']      ?? null,
+            ],
+            ['like', 'username', $params['username'] ?? null],
+            ['like', 'main_email', $params['main_email'] ?? null],
+            ['like', 'backup_email', $params['backup_email'] ?? null]
+        );
+        return $dataProvider;
     }
 }
