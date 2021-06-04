@@ -16,7 +16,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 /* @var $form             yii\widgets\ActiveForm */
 
 $this->params['breadcrumbs'][] = [
-    'label' => 'Tournaments',
+    'label' => Yii::t('app', 'Tournaments'),
     'url'   => ['tournament/index'],
     'data'  => ['method' => 'post']
 ];
@@ -30,7 +30,7 @@ if ($tournament !== null) {
         ]
     ];
     $this->params['breadcrumbs'][] = [
-        'label' => 'Tournament Dates',
+        'label' => Yii::t('app', 'Tournament Dates'),
         'url'   => ['tournament/index'],
         'data'  => [
             'method' => 'post',
@@ -39,7 +39,7 @@ if ($tournament !== null) {
     ];
 } else {
     $this->params['breadcrumbs'][] = [
-        'label' => 'Tournament Dates',
+        'label' => Yii::t('app', 'Tournament Dates'),
         'url'   => ['tournament-date/index'],
         'data'  => ['method' => 'post']
     ];
@@ -54,7 +54,7 @@ if ($tournament_date !== null) {
         ]
     ]; 
     $this->params['breadcrumbs'][] = [
-        'label' => 'Fixtures',
+        'label' => Yii::t('app', 'Fixtures'),
         'url'   => ['index'],
         'data'  => [
             'method' => 'post',
@@ -63,7 +63,7 @@ if ($tournament_date !== null) {
     ];
 } else {
     $this->params['breadcrumbs'][] = [
-        'label' => 'Fixtures',
+        'label' => Yii::t('app', 'Fixtures'),
         'url'   => ['index'],
         'data'  => ['method' => 'post']
     ];
@@ -113,7 +113,7 @@ $this->title = $formTitle;
         <?= $form->field($fixture, 'is_active')->checkbox() ?>
 
         <div class="form-group">
-            <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+            <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

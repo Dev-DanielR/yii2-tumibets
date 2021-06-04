@@ -7,9 +7,9 @@ use yii\grid\GridView;
 /* @var $tournament   app\models\Tournament */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Tournament Dates';
+$this->title = Yii::t('app', 'Tournament Dates');
 $this->params['breadcrumbs'][] = [
-    'label' => 'Tournaments',
+    'label' => Yii::t('app', 'Tournaments'),
     'url'   => ['tournament/index'],
     'data'  => ['method' => 'post']
 ];
@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="tournament-date-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <p><?= Html::a('Create Tournament Date', ['create'], [
+    <p><?= Html::a(Yii::t('app', 'Create Tournament Date'), ['create'], [
         'class' => 'btn btn-success',
         'data'  => [
             'method' => 'post',
@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons'  => [
                     'view' => function ($url, $model) {
                         return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',
-                            ['view'], ['title' => 'View', 'data' => [ 
+                            ['view'], ['title' => Yii::t('app', 'View'), 'data' => [ 
                                 'method' => 'post',
                                 'params' => ['id' => $model->id]
                             ]]
@@ -64,7 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'fixtures' => function ($url, $model) {
                         return Html::a('<span class="glyphicon glyphicon-list-alt"></span>',
-                            ['fixture/index'], ['title' => 'Fixtures', 'data' => [
+                            ['fixture/index'], ['title' => Yii::t('app', 'Fixtures'), 'data' => [
                                 'method' => 'post',
                                 'params' => [
                                     'tournament_id'      => $model->tournament_id,

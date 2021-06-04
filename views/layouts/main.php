@@ -36,42 +36,42 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            '<li>' . Html::a('Users',
+            ['label' => Yii::t('app', 'Home'), 'url' => ['/site/index']],
+            '<li>' . Html::a(Yii::t('app', 'Users'),
                 ['user/index'],
                 ['data' => [ 'method' => 'post']])
             . '</li>',
-            '<li>' . Html::a('Teams',
+            '<li>' . Html::a(Yii::t('app', 'Teams'),
                 ['team/index'],
                 ['data' => [ 'method' => 'post']])
             . '</li>',
-            ['label' => 'Tournaments', 'items' => [
-                '<li>' . Html::a('Tournaments',
+            ['label' => Yii::t('app', 'Tournaments'), 'items' => [
+                '<li>' . Html::a(Yii::t('app', 'Tournaments'),
                     ['tournament/index'],
                     ['data' => [ 'method' => 'post']])
                 . '</li>',
-                '<li>' . Html::a('Tournament Dates',
+                '<li>' . Html::a(Yii::t('app', 'Tournament Dates'),
                     ['tournament-date/index'],
                     ['data' => [ 'method' => 'post']])
                 . '</li>',
-                '<li>' . Html::a('Fixtures',
+                '<li>' . Html::a(Yii::t('app', 'Fixtures'),
                     ['fixture/index'],
                     ['data' => [ 'method' => 'post']])
                 . '</li>'
             ]],
-            '<li>' . Html::a('Bets',
+            '<li>' . Html::a(Yii::t('app', 'Bets'),
                 ['bet/index'],
                 ['data' => [ 'method' => 'post']])
             . '</li>',
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
+            ['label' => Yii::t('app', 'About'), 'url' => ['/site/about']],
+            ['label' => Yii::t('app', 'Contact'), 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
+                ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
+                    Yii::t('app', 'Logout') . ' (' . Yii::$app->user->identity->username . ')',
                     ['class' => 'btn btn-link logout']
                 )
                 . Html::endForm()
@@ -94,7 +94,6 @@ AppAsset::register($this);
 <footer class="footer">
     <div class="container">
         <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>

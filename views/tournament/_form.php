@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 /* @var $form       yii\widgets\ActiveForm */
 
 $this->params['breadcrumbs'][] = [
-    'label' => 'Tournaments',
+    'label' => Yii::t('app', 'Tournaments'),
     'url'   => ['index'],
     'data'  => ['method' => 'post']
 ];
@@ -29,7 +29,7 @@ $this->title = $formTitle;
         <?= $form->field($model, 'is_active')->checkbox() ?>
 
         <div class="form-group">
-            <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+            <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

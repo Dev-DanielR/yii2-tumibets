@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\User */
 
-$this->title = 'User: ' . $model->username;
+$this->title = Yii::t('app', 'User') . ': ' . $model->username;
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->id;
 \yii\web\YiiAsset::register($this);
@@ -15,13 +15,18 @@ $this->params['breadcrumbs'][] = $model->id;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
+        <?= Html::a(Yii::t('app', 'Update'), ['update'], ['class' => 'btn btn-primary',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
                 'method' => 'post',
-            ],
+                'params' => ['id' => $model->id]
+            ]
+        ]) ?>
+        <?= Html::a(Yii::t('app', 'Delete'), ['delete'], ['class' => 'btn btn-danger',
+            'data' => [
+                'method'  => 'post',
+                'confirm' => 'Are you sure you want to delete this item?',
+                'params'  => ['id' => $model->id]
+            ]
         ]) ?>
     </p>
     <?= DetailView::widget([

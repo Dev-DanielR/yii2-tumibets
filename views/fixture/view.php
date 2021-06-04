@@ -10,7 +10,7 @@ use yii\widgets\DetailView;
 
 $this->title = $fixture->teamA->name . ' vs ' . $fixture->teamB->name;
 $this->params['breadcrumbs'][] = [
-    'label' => 'Tournaments',
+    'label' => Yii::t('app', 'Tournaments'),
     'url'   => ['tournament/index'],
     'data'  => ['method' => 'post']
 ];
@@ -24,7 +24,7 @@ if ($tournament !== null) {
         ]
     ];
     $this->params['breadcrumbs'][] = [
-        'label' => 'Tournament Dates',
+        'label' => Yii::t('app', 'Tournament Dates'),
         'url'   => ['tournament/index'],
         'data'  => [
             'method' => 'post',
@@ -33,7 +33,7 @@ if ($tournament !== null) {
     ];
 } else {
     $this->params['breadcrumbs'][] = [
-        'label' => 'Tournament Dates',
+        'label' => Yii::t('app', 'Tournament Dates'),
         'url'   => ['tournament-date/index'],
         'data'  => ['method' => 'post']
     ];
@@ -48,7 +48,7 @@ if ($tournament_date !== null) {
         ]
     ]; 
     $this->params['breadcrumbs'][] = [
-        'label' => 'Fixtures',
+        'label' => Yii::t('app', 'Fixtures'),
         'url'   => ['index'],
         'data'  => [
             'method' => 'post',
@@ -57,7 +57,7 @@ if ($tournament_date !== null) {
     ];
 } else {
     $this->params['breadcrumbs'][] = [
-        'label' => 'Fixtures',
+        'label' => Yii::t('app', 'Fixtures'),
         'url'   => ['index'],
         'data'  => ['method' => 'post']
     ];
@@ -69,13 +69,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
-        <?= Html::a('Update', ['update'], ['class' => 'btn btn-primary',
+        <?= Html::a(Yii::t('app', 'Update'), ['update'], ['class' => 'btn btn-primary',
             'data' => [
                 'method' => 'post',
                 'params' => ['id' => $fixture->id]
             ]
         ]) ?>
-        <?= Html::a('Delete', ['delete'], ['class' => 'btn btn-danger',
+        <?= Html::a(Yii::t('app', 'Delete'), ['delete'], ['class' => 'btn btn-danger',
             'data' => [
                 'method'  => 'post',
                 'confirm' => 'Are you sure you want to delete this item?',

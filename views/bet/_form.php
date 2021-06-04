@@ -12,7 +12,7 @@ use yii\helpers\Arrayhelper;
 /* @var $form       yii\widgets\ActiveForm */
 
 $this->params['breadcrumbs'][] = [
-    'label' => 'Bets',
+    'label' => Yii::t('app', 'Bets'),
     'url'   => ['index'],
     'data'  => ['method' => 'post']
 ];
@@ -36,7 +36,7 @@ $this->title = $formTitle;
         <?= $form->field($bet, 'is_active')->checkbox() ?>
 
         <div class="form-group">
-            <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+            <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

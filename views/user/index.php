@@ -7,13 +7,13 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Users';
+$this->title = Yii::t('app', 'Users');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <p><?= Html::a('Create User', ['create'], [
+    <p><?= Html::a(Yii::t('app', 'Create User'), ['create'], [
         'class' => 'btn btn-success',
         'data'  => ['method' => 'post']
     ]) ?></p>
@@ -30,7 +30,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'is_validated:boolean',
             'is_active:boolean',
             'created:datetime',
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class'    => 'yii\grid\ActionColumn',
+                'template' => '{view}',
+                'buttons'  => [
+                    'view'  => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',
+                            ['view'], ['title' => Yii::t('app', 'View'), 'data' => [ 
+                                'method' => 'post',
+                                'params' => ['id' => $model->id]
+                            ]]
+                        );
+                    }
+                ],
+            ]
         ],
     ]); ?>
 

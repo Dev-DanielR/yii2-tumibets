@@ -8,7 +8,7 @@ use yii\widgets\DetailView;
 
 $this->title = $model->id;
 $this->params['breadcrumbs'][] = [
-    'label' => 'Bets',
+    'label' => Yii::t('app', 'Bets'),
     'url'   => ['index'],
     'data'  => ['method'  => 'post']
 ];
@@ -19,14 +19,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], [
+        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], [
             'class' => 'btn btn-primary',
             'data' => [
                 'method' => 'post',
                 'params' => ['id' => $model->id]
             ]
         ]) ?>
-        <?= Html::a('Delete', ['delete'], [
+        <?= Html::a(Yii::t('app', 'Delete'), ['delete'], [
             'class' => 'btn btn-danger',
             'data' => [
                 'method'  => 'post',

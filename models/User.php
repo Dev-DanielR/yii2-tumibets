@@ -15,6 +15,7 @@ use yii\web\IdentityInterface;
  * @property string $main_email
  * @property string|null $backup_email
  * @property string|null $cellphone
+ * @property string $locale
  * @property string $authKey
  * @property string $accessToken
  * @property bool $is_validated

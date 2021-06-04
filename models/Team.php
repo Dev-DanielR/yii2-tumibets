@@ -58,7 +58,6 @@ class Team extends \yii\db\ActiveRecord
         return [
             'id'           => Yii::t('app', 'ID'),
             'name'         => Yii::t('app', 'Name'),
-            'image_path'   => Yii::t('app', 'Image Path'),
             'is_active'    => Yii::t('app', 'Is Active'),
             'user_created' => Yii::t('app', 'User Created'),
             'time_created' => Yii::t('app', 'Time Created'),

@@ -12,7 +12,7 @@ use yii\helpers\Arrayhelper;
 /* @var $form             yii\widgets\ActiveForm */
 
 $this->params['breadcrumbs'][] = [
-    'label' => 'Tournaments',
+    'label' => Yii::t('app', 'Tournaments'),
     'url'   => ['tournament/index'],
     'data'  => ['method' => 'post']
 ];
@@ -26,7 +26,7 @@ if ($tournament !== null) {
         ]
     ];
     $this->params['breadcrumbs'][] = [
-        'label' => 'Tournament Dates',
+        'label' => Yii::t('app', 'Tournament Dates'),
         'url'   => ['index'],
         'data'  => [
             'method' => 'post',
@@ -35,7 +35,7 @@ if ($tournament !== null) {
     ];
 } else {
     $this->params['breadcrumbs'][] = [
-        'label' => 'Tournament Dates',
+        'label' => Yii::t('app', 'Tournament Dates'),
         'url'   => ['index'],
         'data'  => ['method' => 'post']
     ];
@@ -56,7 +56,7 @@ $this->title = $formTitle;
         <?= $form->field($tournament_date, 'is_active')->checkbox() ?>
 
         <div class="form-group">
-            <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+            <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

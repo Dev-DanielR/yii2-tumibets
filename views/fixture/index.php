@@ -10,7 +10,7 @@ use yii\grid\GridView;
 
 $this->title = 'Fixtures';
 $this->params['breadcrumbs'][] = [
-    'label' => 'Tournaments',
+    'label' => Yii::t('app', 'Tournaments'),
     'url'   => ['tournament/index'],
     'data'  => ['method' => 'post']
 ];
@@ -24,7 +24,7 @@ if ($tournament !== null) {
         ]
     ];
     $this->params['breadcrumbs'][] = [
-        'label' => 'Tournament Dates',
+        'label' => Yii::t('app', 'Tournament Dates'),
         'url'   => ['tournament/index'],
         'data'  => [
             'method' => 'post',
@@ -33,7 +33,7 @@ if ($tournament !== null) {
     ];
 } else {
     $this->params['breadcrumbs'][] = [
-        'label' => 'Tournament Dates',
+        'label' => Yii::t('app', 'Tournament Dates'),
         'url'   => ['tournament-date/index'],
         'data'  => ['method' => 'post']
     ];
@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="fixture-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <p><?= Html::a('Create Fixture', ['create'], [
+    <p><?= Html::a(Yii::t('app', 'Create Fixture'), ['create'], [
         'class' => 'btn btn-success',
         'data'  => [
             'method' => 'post',
@@ -103,7 +103,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons'  => [
                     'view' => function ($url, $model) {
                         return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',
-                            ['view'], ['title' => 'View', 'data' => [ 
+                            ['view'], ['title' => Yii::t('app', 'View'), 'data' => [ 
                                 'method' => 'post',
                                 'params' => ['id' => $model->id]
                             ]]

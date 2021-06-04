@@ -6,14 +6,14 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Teams';
+$this->title = Yii::t('app', 'Teams');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="team-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <p><?= Html::a('Create Team', ['create'], [
+    <p><?= Html::a(Yii::t('app', 'Create Team'), ['create'], [
         'class' => 'btn btn-success',
         'data'  => ['method' => 'post']
     ]) ?></p>
@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             [
-                'label'  => 'Image',
+                'label'  => Yii::t('app', 'Image'),
                 'format' => 'html',
                 'value'  => function ($model) {
                     return Html::img(Yii::$app->request->BaseUrl.'/uploads/teamImages/' . $model->image_path,
@@ -32,7 +32,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             'is_active:boolean',
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class'    => 'yii\grid\ActionColumn',
+                'template' => '{view}',
+                'buttons'  => [
+                    'view' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',
+                            ['view'], ['title' => Yii::t('app', 'View'), 'data' => [ 
+                                'method' => 'post',
+                                'params' => ['id' => $model->id]
+                            ]]
+                        );
+                    }
+                ]
+            ]
         ],
     ]); ?>
 
