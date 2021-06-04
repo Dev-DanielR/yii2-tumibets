@@ -101,6 +101,7 @@ class FixtureController extends Controller
     {
         $id    = Yii::$app->request->post('id');
         $model = $this->findModel($id);
+        $model->datesToReadFormat();
         return $this->helperForm($model, 'update', 'Update Fixture: ' . $model->teamA->name . ' vs ' . $model->teamB->name);
     }
 
