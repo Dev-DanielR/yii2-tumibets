@@ -68,7 +68,6 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->language = $model->selected;
             Yii::$app->session->set('user.locale', $model->selected);
-            Yii::$app->session->setFlash('info', Yii::$app->language);
         }
         return $this->render('index', ['model' => $model]);
     }
