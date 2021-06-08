@@ -198,6 +198,13 @@ class FixtureController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', "Fixture " . $actionName . "d successfully.");
+            /*Yii::$app->mailer->compose()
+                ->setFrom(Yii::$app->params['adminEmail'])
+                ->setTo('dev.danielr@gmail.com')
+                ->setSubject(($actionName == 'create') ? 'New Fixture' : 'Fixture Updated')
+                ->setTextBody('Fixture ' . $model->teamA->name .
+                    ' vs ' . $model->teamB->name . ' ' . $actionName . 'd.')
+                ->send();*/
             return $this->redirect(['index']);
         }
 
@@ -210,5 +217,6 @@ class FixtureController extends Controller
             'tournament_dates' => $dependencies['tournament_dates'],
             'teams'            => $dependencies['teams']
         ]);
+
     }
 }
