@@ -35,48 +35,27 @@ AppAsset::register($this);
     ]);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
+        'items'   => Yii::$app->user->isGuest ? [
             ['label' => Yii::t('app', 'Home'), 'url' => ['/site/index']],
-            '<li>' . Html::a(Yii::t('app', 'Users'),
-                ['user/index'],
-                ['data' => [ 'method' => 'post']])
-            . '</li>',
-            '<li>' . Html::a(Yii::t('app', 'Teams'),
-                ['team/index'],
-                ['data' => [ 'method' => 'post']])
-            . '</li>',
-            ['label' => Yii::t('app', 'Tournaments'), 'items' => [
-                '<li>' . Html::a(Yii::t('app', 'Tournaments'),
-                    ['tournament/index'],
-                    ['data' => [ 'method' => 'post']])
-                . '</li>',
-                '<li>' . Html::a(Yii::t('app', 'Tournament Dates'),
-                    ['tournament-date/index'],
-                    ['data' => [ 'method' => 'post']])
-                . '</li>',
-                '<li>' . Html::a(Yii::t('app', 'Fixtures'),
-                    ['fixture/index'],
-                    ['data' => [ 'method' => 'post']])
-                . '</li>'
-            ]],
-            '<li>' . Html::a(Yii::t('app', 'Bets'),
-                ['bet/index'],
-                ['data' => [ 'method' => 'post']])
-            . '</li>',
             ['label' => Yii::t('app', 'About'), 'url' => ['/site/about']],
             ['label' => Yii::t('app', 'Contact'), 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    Yii::t('app', 'Logout') . ' (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
+            ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']]
+        ] : [
+            ['label' => Yii::t('app', 'Home'), 'url' => ['/site/index']],
+            ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index']],
+            ['label' => Yii::t('app', 'Teams'), 'url' => ['/team/index']],
+            ['label' => Yii::t('app', 'Tournaments'), 'url' => ['/tournament/index']],
+            ['label' => Yii::t('app', 'Bets'), 'url' => ['/bet/index']],
+            ['label' => Yii::t('app', 'About'), 'url' => ['/site/about']],
+            ['label' => Yii::t('app', 'Contact'), 'url' => ['/site/contact']],
+            '<li>'
+            . Html::beginForm(['/site/logout'], 'post')
+            . Html::submitButton(
+                Yii::t('app', 'Logout') . ' (' . Yii::$app->user->identity->username . ')',
+                ['class' => 'btn btn-link logout']
             )
+            . Html::endForm()
+            . '</li>'
         ],
     ]);
     NavBar::end();
