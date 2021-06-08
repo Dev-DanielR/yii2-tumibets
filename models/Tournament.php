@@ -21,6 +21,8 @@ use Yii;
  */
 class Tournament extends \yii\db\ActiveRecord
 {
+    public $image;
+
     /**
      * {@inheritdoc}
      */
@@ -40,6 +42,7 @@ class Tournament extends \yii\db\ActiveRecord
             [['user_created', 'user_updated'], 'integer'],
             [['time_created', 'time_updated'], 'safe'],
             [['name'], 'string', 'max' => 45],
+            [['image'], 'file', 'extensions' => ['png', 'jpg']],
             [['name'], 'unique'],
             [['user_created'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_created' => 'id']],
             [['user_updated'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_updated' => 'id']],
@@ -71,6 +74,15 @@ class Tournament extends \yii\db\ActiveRecord
         if ($insert) $this->user_created = Yii::$app->user->identity->id;
         else $this->user_updated = Yii::$app->user->identity->id;
         return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        echo print_r($changedAttributes);
+        parent::afterSave($insert, $changedAttributes); 
     }
 
     /**

@@ -38,6 +38,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'name',
+            [
+                'label'  => Yii::t('app', 'Image'),
+                'format' => ['image', ['width' => '80px']],
+                'value'  => Yii::$app->request->BaseUrl.'/uploads/tournamentImages/' . $model->image_path
+            ],
             'is_active:boolean',
         ],
     ]) ?>

@@ -26,6 +26,7 @@ $this->title = $formTitle;
         <?php $form = ActiveForm::begin(); ?>
 
         <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'image')->fileInput() ?>
         <?= $form->field($model, 'is_active')->checkbox() ?>
 
         <div class="form-group">

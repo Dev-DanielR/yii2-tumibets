@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             [
-                'label'  => 'Image',
+                'label'  => Yii::t('app', 'Image'),
                 'format' => ['image', ['width' => '80px']],
                 'value'  => Yii::$app->request->BaseUrl.'/uploads/teamImages/' . $model->image_path
             ],

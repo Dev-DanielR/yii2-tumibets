@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use app\models\Tournament;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 use yii\filters\VerbFilter;
 
 /**
@@ -136,9 +137,15 @@ class TournamentController extends Controller
      */
     protected function helperForm($model, $actionName, $formTitle)
     {
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Tournament ' . $actionName . 'd successfully.');
-            return $this->redirect(['index']);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->image = UploadedFile::getInstance($model, 'image');
+            $model->image_path = md5($model->name) . '.' . $model->image->extension;
+
+            if ($model->save() && $model->image->saveAs(SITE_ROOT .
+                '\\uploads\\tournamentImages\\' . $model->image_path)) {
+                Yii::$app->session->setFlash('success', 'Tournament ' . $actionName . 'd successfully.');
+                return $this->redirect(['index']);
+            }
         }
         return $this->render('_form', [
             'formTitle'  => $formTitle,
