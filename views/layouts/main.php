@@ -11,7 +11,38 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
+
+$navLinks = [
+    ['label' => Yii::t('app', 'Home'), 'url' => ['/site/index']],
+    ['label' => Yii::t('app', 'About'), 'url' => ['/site/about']],
+    ['label' => Yii::t('app', 'Contact'), 'url' => ['/site/contact']],
+    ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']]
+];
+if (!Yii::$app->user->isGuest) {
+    $user = Yii::$app->user->identity;
+    if ($user->is_admin) $navLinks = [
+        ['label' => Yii::t('app', 'Home'), 'url' => ['/site/index']],
+        ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index']],
+        ['label' => Yii::t('app', 'Teams'), 'url' => ['/team/index']],
+        ['label' => Yii::t('app', 'Tournaments'), 'url' => ['/tournament/index']],
+        ['label' => Yii::t('app', 'Bets'), 'url' => ['/bet/index']],
+        ['label' => Yii::t('app', 'About'), 'url' => ['/site/about']],
+        ['label' => Yii::t('app', 'Contact'), 'url' => ['/site/contact']],
+        '<li>'
+        . Html::beginForm(['/site/logout'], 'post')
+        . Html::submitButton(
+            Yii::t('app', 'Logout') . ' (' . Yii::$app->user->identity->username . ')',
+            ['class' => 'btn btn-link logout']
+        )
+        . Html::endForm()
+        . '</li>'
+    ];
+}
+
+$breadcrumbLinks = [];
+if (isset($this->params['breadcrumbs'])) $breadcrumbLinks = $this->params['breadcrumbs'];
 ?>
+
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -35,36 +66,13 @@ AppAsset::register($this);
     ]);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
-        'items'   => Yii::$app->user->isGuest ? [
-            ['label' => Yii::t('app', 'Home'), 'url' => ['/site/index']],
-            ['label' => Yii::t('app', 'About'), 'url' => ['/site/about']],
-            ['label' => Yii::t('app', 'Contact'), 'url' => ['/site/contact']],
-            ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']]
-        ] : [
-            ['label' => Yii::t('app', 'Home'), 'url' => ['/site/index']],
-            ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index']],
-            ['label' => Yii::t('app', 'Teams'), 'url' => ['/team/index']],
-            ['label' => Yii::t('app', 'Tournaments'), 'url' => ['/tournament/index']],
-            ['label' => Yii::t('app', 'Bets'), 'url' => ['/bet/index']],
-            ['label' => Yii::t('app', 'About'), 'url' => ['/site/about']],
-            ['label' => Yii::t('app', 'Contact'), 'url' => ['/site/contact']],
-            '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
-            . Html::submitButton(
-                Yii::t('app', 'Logout') . ' (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout']
-            )
-            . Html::endForm()
-            . '</li>'
-        ],
+        'items'   => $navLinks,
     ]);
     NavBar::end();
     ?>
 
     <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
+        <?= Breadcrumbs::widget(['links' => $breadcrumbLinks]) ?>
         <?= Alert::widget() ?>
         <?= $content ?>
     </div>
