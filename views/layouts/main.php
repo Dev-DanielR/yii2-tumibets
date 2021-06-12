@@ -12,31 +12,48 @@ use app\assets\AppAsset;
 
 AppAsset::register($this);
 
+//Assign navlinks for guest user
 $navLinks = [
     ['label' => Yii::t('app', 'Home'), 'url' => ['/site/index']],
     ['label' => Yii::t('app', 'About'), 'url' => ['/site/about']],
     ['label' => Yii::t('app', 'Contact'), 'url' => ['/site/contact']],
     ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']]
 ];
+
+//Assign navlinks for non-guest user
 if (!Yii::$app->user->isGuest) {
+
+    //Get identity for non guest user
     $user = Yii::$app->user->identity;
+
+    //Assign navlinks for admin user
     if ($user->is_admin) $navLinks = [
         ['label' => Yii::t('app', 'Home'), 'url' => ['/site/index']],
-        ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index']],
+        ['label' => Yii::t('app', 'Users'), 'items' =>[
+            ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index']],
+            ['label' => Yii::t('app', 'User Sessions'), 'url' => ['/user-session/index']],
+        ]],
         ['label' => Yii::t('app', 'Teams'), 'url' => ['/team/index']],
         ['label' => Yii::t('app', 'Tournaments'), 'url' => ['/tournament/index']],
         ['label' => Yii::t('app', 'Bets'), 'url' => ['/bet/index']],
         ['label' => Yii::t('app', 'About'), 'url' => ['/site/about']],
         ['label' => Yii::t('app', 'Contact'), 'url' => ['/site/contact']],
-        '<li>'
-        . Html::beginForm(['/site/logout'], 'post')
-        . Html::submitButton(
-            Yii::t('app', 'Logout') . ' (' . Yii::$app->user->identity->username . ')',
-            ['class' => 'btn btn-link logout']
-        )
-        . Html::endForm()
-        . '</li>'
     ];
+
+    //Assign navlinks for non admin user
+    else $navLinks = [
+        ['label' => Yii::t('app', 'Home'), 'url' => ['/site/index']],
+        ['label' => Yii::t('app', 'About'), 'url' => ['/site/about']],
+        ['label' => Yii::t('app', 'Contact'), 'url' => ['/site/contact']],
+    ];
+
+    //Add logout button
+    $navLinks[] = '<li>'
+    . Html::beginForm(['/site/logout'], 'post')
+    . Html::submitButton(
+        Yii::t('app', 'Logout') . ' (' . Yii::$app->user->identity->username . ')',
+        ['class' => 'btn btn-link logout'])
+    . Html::endForm() . '</li>';
 }
 
 $breadcrumbLinks = [];
