@@ -8,12 +8,17 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
+use app\models\RegisterForm;
 use app\models\LanguageForm;
 use app\models\UserSession;
 use app\models\ContactForm;
 
 class SiteController extends Controller
 {
+    static $flashMessages = [
+        'register' => 'User account created successfully.'
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -33,9 +38,7 @@ class SiteController extends Controller
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
+                'actions' => ['logout' => ['POST']],
             ],
         ];
     }
@@ -46,9 +49,7 @@ class SiteController extends Controller
     public function actions()
     {
         return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
+            'error' => ['class' => 'yii\web\ErrorAction'],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
@@ -58,7 +59,6 @@ class SiteController extends Controller
 
     /**
      * Displays homepage.
-     *
      * @return string
      */
     public function actionIndex()
@@ -74,7 +74,6 @@ class SiteController extends Controller
 
     /**
      * Login action.
-     *
      * @return Response|string
      */
     public function actionLogin()
@@ -99,14 +98,13 @@ class SiteController extends Controller
 
     /**
      * Logout action.
-     *
      * @return Response
      */
     public function actionLogout()
     {
         $session_id = Yii::$app->session->get('user.session_id');
         if (Yii::$app->user->logout()) {
-            $sessionModel = UserSession::find()->where(['id' => $session_id])->one();
+            $sessionModel = UserSession::findOne($session_id);
             $sessionModel->logout_timestamp = date('Y-m-d H:i:s');
             if ($sessionModel->save()) Yii::$app->session->set('user.session_id', null);
         }
@@ -115,8 +113,27 @@ class SiteController extends Controller
     }
 
     /**
+     * Register action
+     * @return Response|string
+     */
+    public function actionRegister()
+    {
+        //if (!Yii::$app->user->isGuest) { return $this->goBack(); }
+
+        $model = new RegisterForm();
+        if ($model->load(Yii::$app->request->post()) && $model->register()) {
+            Yii::$app->session->setFlash('success',
+                Yii::t('app', static::$flashMessages['register']));
+            return $this->render('login', ['model' => new LoginForm()]);
+        }
+
+        $model->password = '';
+        $model->passwordConfirm = '';
+        return $this->render('register', ['model' => $model]);
+    }
+
+    /**
      * Displays contact page.
-     *
      * @return Response|string
      */
     public function actionContact()
@@ -132,7 +149,6 @@ class SiteController extends Controller
 
     /**
      * Displays about page.
-     *
      * @return string
      */
     public function actionAbout()
