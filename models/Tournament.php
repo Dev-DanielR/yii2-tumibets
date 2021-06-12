@@ -7,16 +7,17 @@ use Yii;
 /**
  * This is the model class for table "tournament".
  *
- * @property int $id
- * @property string $name
- * @property bool $is_active
- * @property int $user_created
- * @property string $time_created
- * @property int|null $user_updated
+ * @property int         $id
+ * @property string      $name
+ * @property string|null $image_path
+ * @property bool        $is_active
+ * @property int         $user_created
+ * @property string      $time_created
+ * @property int|null    $user_updated
  * @property string|null $time_updated
  *
- * @property User $userCreated
- * @property User $userUpdated
+ * @property User             $userCreated
+ * @property User             $userUpdated
  * @property TournamentDate[] $tournamentDates
  */
 class Tournament extends \yii\db\ActiveRecord
@@ -41,7 +42,7 @@ class Tournament extends \yii\db\ActiveRecord
             [['is_active'], 'boolean'],
             [['user_created', 'user_updated'], 'integer'],
             [['time_created', 'time_updated'], 'safe'],
-            [['name'], 'string', 'max' => 45],
+            [['name'], 'string', 'max' => 64],
             [['image'], 'file', 'extensions' => ['png', 'jpg']],
             [['name'], 'unique'],
             [['user_created'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_created' => 'id']],

@@ -3,24 +3,27 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/* @var $this       yii\web\View */
-/* @var $formTitle  String */
-/* @var $actionName String */
-/* @var $model      app\models\Tournament */
-/* @var $form       yii\widgets\ActiveForm */
+/* @var $this   yii\web\View */
+/* @var $action String */
+/* @var $model  app\models\Tournament */
+/* @var $form   yii\widgets\ActiveForm */
 
+$this->title = Yii::t('app', ($action === 'create') ? 'Create Tournament' : 'Update Tournament');
 $this->params['breadcrumbs'][] = [
     'label' => Yii::t('app', 'Tournaments'),
     'url'   => ['index'],
     'data'  => ['method' => 'post']
 ];
-$this->params['breadcrumbs'][] = $formTitle;
-$this->title = $formTitle;
+if ($action === 'update') $this->params['breadcrumbs'][] = [
+    'label' => $model->name,
+    'url' => ['view', 'id' => $model->id]
+];
+$this->params['breadcrumbs'][] = ucfirst($action);
 ?>
 
-<div class="tournament-<?= $actionName ?>">
+<div class="tournament-<?= $action ?>">
 
-    <h1><?= Html::encode($formTitle) ?></h1>
+    <h1><?= Html::encode($this->title) ?></h1>
     <div class="tournament-form">
 
         <?php $form = ActiveForm::begin(); ?>
