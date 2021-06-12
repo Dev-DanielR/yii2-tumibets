@@ -116,7 +116,7 @@ class TeamController extends Controller
         switch ($action) {
             case 'view':   $model = TeamView::findOne($id); break;
             case 'create': $model = new Team(); break;
-            default:       $model = Team::find($id);
+            default:       $model = Team::findOne($id);
         }
         //Throw error if model not found
         if ($model === NULL) throw new NotFoundHttpException('The requested page does not exist.');
