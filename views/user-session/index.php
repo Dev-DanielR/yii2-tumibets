@@ -18,8 +18,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'username',
             'is_admin:boolean',
-            'login_timestamp',
-            'logout_timestamp',
+            'login_timestamp:datetime',
+            'logout_timestamp:datetime',
             [
                 'class'    => 'yii\grid\ActionColumn',
                 'template' => '{view}',

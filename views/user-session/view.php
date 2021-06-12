@@ -20,8 +20,8 @@ $this->params['breadcrumbs'][] = $model->username;
             'id',
             'username',
             'is_admin:boolean',
-            'login_timestamp',
-            'logout_timestamp',
+            'login_timestamp:datetime',
+            'logout_timestamp:datetime',
         ],
     ]) ?>
 

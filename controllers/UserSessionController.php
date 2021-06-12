@@ -45,8 +45,19 @@ class UserSessionController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = $this->search(Yii::$app->request->queryParams);
-        return $this->render('index', ['dataProvider' => $dataProvider]);
+        $params = Yii::$app->request->queryParams;
+        $query  = UserSessionView::find()
+            ->andFilterWhere([
+                'id'       => $params['id']       ?? null,
+                'is_admin' => $params['is_admin'] ?? null])
+            ->andFilterWhere(['like', 'username', $params['username'] ?? null])
+            ->andFilterWhere(['like', 'login_timestamp', $params['login_timestamp'] ?? null])
+            ->andFilterWhere(['like', 'logout_timestamp', $params['logout_timestamp'] ?? null])
+            ->orderBy('login_timestamp DESC');
+
+        return $this->render('index', [
+            'dataProvider' => new ActiveDataProvider(['query' => $query])
+        ]);
     }
 
     /**
@@ -57,39 +68,9 @@ class UserSessionController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', ['model' => $this->findModel($id)]);
+        $model = UserSessionView::findOne($id);
+        if ($model === NULL) throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        return $this->render('view', ['model' => $model]);
     }
 
-    /**
-     * Finds the UserSessionView model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return UserSessionView the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = UserSessionView::findOne($id)) !== null) return $model;
-        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-    }
-
-    /**
-     * Creates data provider instance with search query applied
-     * @param array $params
-     * @return ActiveDataProvider
-     */
-    protected function search($params)
-    {
-        $query        = UserSessionView::find();
-        $dataProvider = new ActiveDataProvider(['query' => $query]);
-        $query->andFilterWhere([
-            'id'       => $params['id']       ?? null,
-            'is_admin' => $params['is_admin'] ?? null,
-        ]);
-        $query->andFilterWhere(['like', 'username', $params['username'] ?? null]);
-        $query->andFilterWhere(['like', 'login_timestamp', $params['login_timestamp'] ?? null]);
-        $query->andFilterWhere(['like', 'logout_timestamp', $params['logout_timestamp'] ?? null]);
-        $query->orderBy('login_timestamp DESC');
-        return $dataProvider;
-    }
 }
