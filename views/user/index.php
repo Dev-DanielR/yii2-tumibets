@@ -13,10 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="user-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <p><?= Html::a(Yii::t('app', 'Create User'), ['create'], [
-        'class' => 'btn btn-success',
-        'data'  => ['method' => 'post']
-    ]) ?></p>
+    <p><?= Html::a(Yii::t('app', 'Create User'), ['create'], ['class' => 'btn btn-success']) ?></p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -35,11 +32,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '{view}',
                 'buttons'  => [
                     'view'  => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',
-                            ['view'], ['title' => Yii::t('app', 'View'), 'data' => [ 
-                                'method' => 'post',
-                                'params' => ['id' => $model->id]
-                            ]]
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-eye-open"></span>',
+                            ['view', 'id' => $model->id],
+                            ['title' => Yii::t('app', 'View')]
                         );
                     }
                 ],

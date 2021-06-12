@@ -15,6 +15,12 @@ use yii\filters\VerbFilter;
  */
 class UserController extends Controller
 {
+    static $flashMessges = [
+        'create' => 'User created succesfully.',
+        'update' => 'User updated sucessfully.',
+        'delete' => 'User deleted sucessfully.'
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -33,11 +39,7 @@ class UserController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'index'  => ['GET', 'POST'],
-                    'view'   => ['POST'],
-                    'create' => ['POST'],
-                    'update' => ['POST'],
-                    'delete' => ['POST']
+                    'delete' => ['POST'],
                 ],
             ],
         ];
@@ -49,18 +51,18 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = $this->search(Yii::$app->request->post());
+        $dataProvider = $this->search(Yii::$app->request->queryParams);
         return $this->render('index', ['dataProvider' => $dataProvider]);
     }
 
     /**
      * Displays a single User model.
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView()
+    public function actionView($id)
     {
-        $id = Yii::$app->request->post('id');
         return $this->render('view', ['model' => $this->findModel($id)]);
     }
 
@@ -72,28 +74,20 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new User();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', "User created successfully.");
-            return $this->redirect(['index']);
-        }
-        return $this->render('create', ['model' => $model]);
+        return $this->helperForm('create', $model);
     }
 
     /**
      * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate()
+    public function actionUpdate($id)
     {
-        $id    = Yii::$app->request->post('id');
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', "User updated successfully.");
-            return $this->redirect(['index']);
-        }
-        return $this->render('update', ['model' => $model]);
+        return $this->helperForm('update', $model);
     }
 
     /**
@@ -103,9 +97,8 @@ class UserController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete()
+    public function actionDelete($id)
     {
-        $id = Yii::$app->request->post('id');
         $this->findModel($id)->delete();
         Yii::$app->session->setFlash('success', "User deleted successfully.");
         return $this->redirect(['index']);
@@ -121,7 +114,7 @@ class UserController extends Controller
     protected function findModel($id)
     {
         if (($model = User::findOne($id)) !== null) return $model;
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
 
     /**
@@ -134,17 +127,30 @@ class UserController extends Controller
         $query        = User::find();
         $dataProvider = new ActiveDataProvider(['query' => $query]);
         $query->andFilterWhere([
-                'id'           => $params['id']           ?? null,
-                'is_admin'     => $params['is_admin']     ?? null,
-                'cellphone'    => $params['cellphone']    ?? null,
-                'is_validated' => $params['is_validated'] ?? null,
-                'is_active'    => $params['is_active']    ?? null,
-                'created'      => $params['created']      ?? null,
-            ],
-            ['like', 'username', $params['username'] ?? null],
-            ['like', 'main_email', $params['main_email'] ?? null],
-            ['like', 'backup_email', $params['backup_email'] ?? null]
-        );
+            'id'           => $params['id']           ?? null,
+            'is_active'    => $params['is_active']    ?? null,
+            'is_validated' => $params['is_validated'] ?? null,
+        ]);
+        $query->andFilterWhere(['like', 'name', $params['name'] ?? null]);
+        $query->andFilterWhere(['like', 'main_email', $params['main_email'] ?? null]);
+        $query->andFilterWhere(['like', 'backup_email', $params['name'] ?? null]);
         return $dataProvider;
+    }
+
+    /**
+     * Helps render form for Create & Update actions.
+     */
+    protected function helperForm($action, $model)
+    {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success',
+                Yii::t('app', static::$flashMessages[$action]));
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('_form', [
+            'action' => $action,
+            'model'  => $model
+        ]);
     }
 }

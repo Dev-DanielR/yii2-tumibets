@@ -8,32 +8,32 @@ use yii\web\IdentityInterface;
 /**
  * This is the model class for table "user".
  *
- * @property int $id
- * @property bool $is_admin
- * @property string $username
- * @property string $password
- * @property string $main_email
+ * @property int         $id
+ * @property bool        $is_admin
+ * @property string      $username
+ * @property string      $password
+ * @property string      $main_email
  * @property string|null $backup_email
  * @property string|null $cellphone
- * @property string $locale
- * @property string $authKey
- * @property string $accessToken
- * @property bool $is_validated
- * @property bool $is_active
- * @property string $created
+ * @property string      $locale
+ * @property string      $authKey
+ * @property string      $accessToken
+ * @property bool        $is_validated
+ * @property bool        $is_active
+ * @property string      $created
  *
- * @property Bet[] $bets
- * @property Bet[] $betsCreated
- * @property Bet[] $betsUpdated
- * @property Fixture[] $fixturesCreated
- * @property Fixture[] $fixturesUpdated
- * @property Team[] $teamsCreated
- * @property Team[] $teamsUpdated
- * @property Tournament[] $tournamentsCreated
- * @property Tournament[] $tournamentsUpdated
+ * @property Bet[]            $bets
+ * @property Bet[]            $betsCreated
+ * @property Bet[]            $betsUpdated
+ * @property Fixture[]        $fixturesCreated
+ * @property Fixture[]        $fixturesUpdated
+ * @property Team[]           $teamsCreated
+ * @property Team[]           $teamsUpdated
+ * @property Tournament[]     $tournamentsCreated
+ * @property Tournament[]     $tournamentsUpdated
  * @property TournamentDate[] $tournamentDatesCreated
  * @property TournamentDate[] $tournamentDatesUpdated
- * @property UserSession[] $userSessions
+ * @property UserSession[]    $userSessions
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
@@ -165,10 +165,10 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     private function generateString()
     {
         $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $input_length = strlen($this->permitted_chars);
+        $input_length = strlen($permitted_chars);
         $random_string = '';
         for($i = 0; $i < 64; $i++) {
-            $random_character = $this->permitted_chars[mt_rand(0, $input_length - 1)];
+            $random_character = $permitted_chars[mt_rand(0, $input_length - 1)];
             $random_string .= $random_character;
         }
         return $random_string;
