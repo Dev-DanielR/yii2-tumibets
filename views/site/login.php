@@ -38,4 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php ActiveForm::end(); ?>
 
+    <div>Do not have an account? <?= Html::a(Yii::t('app', 'Register here.'), 'register') ?></div>
+
 </div>
