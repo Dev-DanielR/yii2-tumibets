@@ -7,18 +7,18 @@ use Yii;
 /**
  * This is the model class for table "team".
  *
- * @property int $id
- * @property string $name
+ * @property int         $id
+ * @property string      $name
  * @property string|null $image_path
- * @property bool $is_active
- * @property int $user_created
- * @property string $time_created
- * @property int|null $user_updated
+ * @property bool        $is_active
+ * @property int         $user_created
+ * @property string      $time_created
+ * @property int|null    $user_updated
  * @property string|null $time_updated
  *
  * @property Fixture[] $fixtures
- * @property User $userCreated
- * @property User $userUpdated
+ * @property User      $userCreated
+ * @property User      $userUpdated
  */
 class Team extends \yii\db\ActiveRecord
 {
