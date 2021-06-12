@@ -7,9 +7,9 @@ use Yii;
 /**
  * This is the model class for table "user_session".
  *
- * @property int $id
- * @property int $user_id
- * @property string $login_timestamp
+ * @property int         $id
+ * @property int         $user_id
+ * @property string      $login_timestamp
  * @property string|null $logout_timestamp
  *
  * @property User $user
