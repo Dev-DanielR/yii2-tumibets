@@ -29,13 +29,7 @@ class UserSessionController extends Controller
                         'roles' => ['@'],
                     ],
                 ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
+            ]
         ];
     }
 
@@ -69,7 +63,7 @@ class UserSessionController extends Controller
     public function actionView($id)
     {
         $model = UserSessionView::findOne($id);
-        if ($model === NULL) throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        if ($model === null) throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
         return $this->render('view', ['model' => $model]);
     }
 

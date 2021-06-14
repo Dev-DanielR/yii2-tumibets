@@ -110,7 +110,7 @@ class TeamController extends Controller
     /**
      * Helps render for CRUD actions.
      */
-    protected function helperCRUD($action, $id = NULL)
+    protected function helperCRUD($action, $id = null)
     {
         //Find model
         switch ($action) {
@@ -119,7 +119,7 @@ class TeamController extends Controller
             default:       $model = Team::findOne($id);
         }
         //Throw error if model not found
-        if ($model === NULL) throw new NotFoundHttpException('The requested page does not exist.');
+        if ($model === null) throw new NotFoundHttpException('The requested page does not exist.');
 
         //Handle actions
         switch ($action) {

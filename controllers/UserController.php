@@ -107,7 +107,7 @@ class UserController extends Controller
     /**
      * Helps render for CRUD actions.
      */
-    protected function helperCRUD($action, $id = NULL)
+    protected function helperCRUD($action, $id = null)
     {
         //Find model
         switch ($action) {

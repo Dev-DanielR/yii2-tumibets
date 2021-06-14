@@ -23,11 +23,18 @@ class TournamentController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
+                'actions' => ['delete' => ['POST']]
             ],
         ];
     }
@@ -41,8 +48,9 @@ class TournamentController extends Controller
         $params = Yii::$app->request->queryParams;
         $query  = TournamentView::find()
             ->andFilterWhere([
-                'id'        => $params['id']            ?? null,
-                'is_active' => $params['is_active']     ?? null])
+                'id'            => $params['id']            ?? null,
+                'is_active'     => $params['is_active']     ?? null,
+                'fixture_count' => $params['fixture_count'] ?? null])
             ->andFilterWhere(['like', 'name', $params['name'] ?? null])
             ->andFilterWhere(['like', 'user_created', $params['user_created'] ?? null])
             ->andFilterWhere(['like', 'time_created', $params['time_created'] ?? null])
@@ -103,7 +111,7 @@ class TournamentController extends Controller
     /**
      * Helps render for CRUD actions.
      */
-    protected function helperCRUD($action, $id = NULL)
+    protected function helperCRUD($action, $id = null)
     {
         //Find model
         switch ($action) {
@@ -112,7 +120,7 @@ class TournamentController extends Controller
             default:       $model = Tournament::findOne($id);
         }
         //Throw error if model not found
-        if ($model === NULL) throw new NotFoundHttpException('The requested page does not exist.');
+        if ($model === null) throw new NotFoundHttpException('The requested page does not exist.');
 
         //Handle actions
         switch ($action) {
@@ -132,9 +140,8 @@ class TournamentController extends Controller
                     $model->image = UploadedFile::getInstance($model, 'image');
                     $model->image_path = md5($model->name) . '.' . $model->image->extension;
 
-                    if ($model->save() && $model->image->saveAs(SITE_ROOT .
-                        '\\uploads\\tournamentImages\\' . $model->image_path)) {
-                            $this->setFlash($action);
+                    if ($model->save() && $model->image->saveAs(SITE_ROOT . '\\uploads\\tournamentImages\\' . $model->image_path)) {
+                        $this->setFlash($action);
                         return $this->redirect(['index']);
                     }
                 }
