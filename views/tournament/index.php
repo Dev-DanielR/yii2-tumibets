@@ -6,13 +6,17 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+//Tournment Index
 $this->title = Yii::t('app', 'Tournaments');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tournament-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <p><?= Html::a(Yii::t('app', 'Create Tournament'), ['create'], ['class' => 'btn btn-success']) ?></p>
+    <p><?= Html::a(
+        Yii::t('app', 'Create Tournament'),
+        ['create'], ['class' => 'btn btn-success'])
+    ?></p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -28,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             'is_active:boolean',
+            'tournament_date_count',
             [
                 'class'    => 'yii\grid\ActionColumn',
                 'template' => '{view} {dates}',

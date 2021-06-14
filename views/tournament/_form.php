@@ -8,16 +8,20 @@ use yii\widgets\ActiveForm;
 /* @var $model  app\models\Tournament */
 /* @var $form   yii\widgets\ActiveForm */
 
-$this->title = Yii::t('app', ($action === 'create') ? 'Create Tournament' : 'Update Tournament');
+//Tournament Index
 $this->params['breadcrumbs'][] = [
     'label' => Yii::t('app', 'Tournaments'),
-    'url'   => ['index'],
-    'data'  => ['method' => 'post']
+    'url'   => ['index']
 ];
+
+//Tournament View
 if ($action === 'update') $this->params['breadcrumbs'][] = [
     'label' => $model->name,
-    'url' => ['view', 'id' => $model->id]
+    'url'   => ['view', 'id' => $model->id]
 ];
+
+//Tournament Form
+$this->title = Yii::t('app', ($action === 'create') ? 'Create Tournament' : 'Update Tournament');
 $this->params['breadcrumbs'][] = ucfirst($action);
 ?>
 

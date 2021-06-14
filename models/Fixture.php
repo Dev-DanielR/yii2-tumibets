@@ -7,32 +7,29 @@ use Yii;
 /**
  * This is the model class for table "fixture".
  *
- * @property int $id
- * @property int $tournament_date_id
- * @property int $teamA_id
- * @property int $teamB_id
- * @property int $teamA_score
- * @property int $teamB_score
+ * @property int         $id
+ * @property int         $tournament_date_id
+ * @property int         $teamA_id
+ * @property int         $teamB_id
+ * @property int         $teamA_score
+ * @property int         $teamB_score
  * @property string|null $start
  * @property string|null $end
- * @property bool $is_active
- * @property int $user_created
- * @property string $time_created
- * @property int|null $user_updated
+ * @property bool        $is_active
+ * @property int         $user_created
+ * @property string      $time_created
+ * @property int|null    $user_updated
  * @property string|null $time_updated
  *
- * @property Bet[] $bets
- * @property Team $teamA
- * @property Team $teamB
+ * @property Bet[]          $bets
+ * @property Team           $teamA
+ * @property Team           $teamB
  * @property TournamentDate $tournamentDate
- * @property User $userCreated
- * @property User $userUpdated
+ * @property User           $userCreated
+ * @property User           $userUpdated
  */
 class Fixture extends \yii\db\ActiveRecord
 {
-    protected $DB_format = 'Y-m-d H:i:s';
-    protected $read_format = 'd/m/y h:i A';
-
     /**
      * {@inheritdoc}
      */

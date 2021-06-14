@@ -6,9 +6,16 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\TournamentView */
 
+//Tournment Index
+$this->params['breadcrumbs'][] = [
+    'label' => Yii::t('app', 'Tournaments'),
+    'url'   => ['index']
+];
+
+//Tournment View
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Tournaments'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="tournament-view">
@@ -42,11 +49,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'time_updated:datetime',
         ],
     ]) ?>
-    <?= Html::a('View Dates', ['tournament-date/index'], ['class' => 'btn btn-success',
-        'data' => [
-            'method' => 'post',
-            'params' => ['tournament_id' => $model->id]
-        ]
-    ]) ?>
+    <?= Html::a(
+        'View Dates',
+        ['tournament-date/index', 'tournament_id' => $model->id],
+        ['class' => 'btn btn-success'])
+    ?>
 
 </div>

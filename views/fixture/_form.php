@@ -6,84 +6,65 @@ use yii\helpers\Arrayhelper;
 use dosamigos\datetimepicker\DateTimePicker;
 
 /* @var $this             yii\web\View */
-/* @var $formTitle        String */
-/* @var $actionName       String */
+/* @var $action           String */
 /* @var $tournament       app\models\Tournament */
 /* @var $tournament_date  app\models\TournamentDate */
 /* @var $fixture          app\models\Fixture */
-/* @var $tournament_dates app\models\TournamentDate[] */
 /* @var $teams            app\models\Team[] */
 /* @var $form             yii\widgets\ActiveForm */
 
+//Tournament Index
 $this->params['breadcrumbs'][] = [
     'label' => Yii::t('app', 'Tournaments'),
-    'url'   => ['tournament/index'],
-    'data'  => ['method' => 'post']
+    'url'   => ['tournament/index']
 ];
-if ($tournament !== null) {
-    $this->params['breadcrumbs'][] = [
-        'label' => $tournament->name,
-        'url'   => ['tournament/view'],
-        'data'  => [
-            'method' => 'post',
-            'params' => ['id' => $tournament->id]
-        ]
-    ];
-    $this->params['breadcrumbs'][] = [
-        'label' => Yii::t('app', 'Tournament Dates'),
-        'url'   => ['tournament/index'],
-        'data'  => [
-            'method' => 'post',
-            'params' => ['tournament_id' => $tournament->id]
-        ]
-    ];
-} else {
-    $this->params['breadcrumbs'][] = [
-        'label' => Yii::t('app', 'Tournament Dates'),
-        'url'   => ['tournament-date/index'],
-        'data'  => ['method' => 'post']
-    ];
-}
-if ($tournament_date !== null) {
-    $this->params['breadcrumbs'][] = [
-        'label' => $tournament_date->name,
-        'url'   => ['tournament-date/view'],
-        'data'  => [
-            'method' => 'post',
-            'params' => ['id' => $tournament_date->id]
-        ]
-    ]; 
-    $this->params['breadcrumbs'][] = [
-        'label' => Yii::t('app', 'Fixtures'),
-        'url'   => ['index'],
-        'data'  => [
-            'method' => 'post',
-            'params' => ['tournament_date_id' => $tournament_date->id]
-        ]
-    ];
-} else {
-    $this->params['breadcrumbs'][] = [
-        'label' => Yii::t('app', 'Fixtures'),
-        'url'   => ['index'],
-        'data'  => ['method' => 'post']
-    ];
-}
-$this->params['breadcrumbs'][] = $formTitle;
-$this->title = $formTitle;
+
+//Tournament View
+$this->params['breadcrumbs'][] = [
+    'label' => $tournament->name,
+    'url'   => ['tournament/view', 'id' => $tournament->id]
+];
+
+//Tournament Date Index
+$this->params['breadcrumbs'][] = [
+    'label' => Yii::t('app', 'Tournament Dates'),
+    'url'   => ['tournament-date/index', 'tournament_id' => $tournament->id]
+];
+
+//Tournament Date View
+$this->params['breadcrumbs'][] = [
+    'label' => $tournament_date->name,
+    'url'   => ['tournament-date/view', 'id' => $tournament_date->id]
+];
+
+//Fixture Index
+$this->params['breadcrumbs'][] = [
+    'label' => Yii::t('app', 'Tournament Dates'),
+    'url'   => ['index', 'tournament_id' => $tournament->id]
+];
+
+//Fixture View
+if ($action === 'update') $this->params['breadcrumbs'][] = [
+    'label' => $fixture->name,
+    'url'   => ['view', 'id' => $fixture->id]
+];
+
+//Fixture Form
+$this->title = Yii::t('app', ($action === 'create') ? 'Create Fixture' : 'Update Fixture');
+$this->params['breadcrumbs'][] = ucfirst($action);
 ?>
 
-<div class="fixture-<?= $actionName ?>">
+<div class="fixture-<?= $action ?>">
 
-    <h1><?= Html::encode($formTitle) ?></h1>
+    <h1><?= Html::encode($this->title) ?></h1>
     <div class="fixture-form">
 
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($fixture, 'tournament_date_id')->dropDownList(ArrayHelper::map($tournament_dates, "id", "name"), ['prompt' => 'Select Tournament Date']) ?>
         <?= $form->field($fixture, 'teamA_id')->dropDownList(ArrayHelper::map($teams, "id", "name"), ['prompt' => 'Select Team']) ?>
         <?= $form->field($fixture, 'teamB_id')->dropDownList(ArrayHelper::map($teams, "id", "name"), ['prompt' => 'Select Team']) ?>
-        <?php if($actionName != 'create') echo $form->field($fixture, 'teamA_score')->textInput() ?>
-        <?php if($actionName != 'create') echo $form->field($fixture, 'teamB_score')->textInput() ?>
+        <?php if($action != 'create') echo $form->field($fixture, 'teamA_score')->textInput() ?>
+        <?php if($action != 'create') echo $form->field($fixture, 'teamB_score')->textInput() ?>
         <?= $form->field($fixture, 'start')->widget(DateTimePicker::className(), [
             'size'           => 'ms',
             'template'       => '{addon}{input}',

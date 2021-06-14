@@ -7,19 +7,19 @@ use Yii;
 /**
  * This is the model class for table "tournament_date".
  *
- * @property int $id
- * @property int $tournament_id
- * @property string|null $name
- * @property bool $is_active
- * @property int $user_created
- * @property string $time_created
- * @property int|null $user_updated
+ * @property int         $id
+ * @property int         $tournament_id
+ * @property string      $name
+ * @property bool        $is_active
+ * @property int         $user_created
+ * @property string      $time_created
+ * @property int|null    $user_updated
  * @property string|null $time_updated
  *
- * @property Fixture[] $fixtures
+ * @property Fixture[]  $fixtures
  * @property Tournament $tournament
- * @property User $userCreated
- * @property User $userUpdated
+ * @property User       $userCreated
+ * @property User       $userUpdated
  */
 class TournamentDate extends \yii\db\ActiveRecord
 {
@@ -37,11 +37,11 @@ class TournamentDate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tournament_id'], 'required'],
+            [['tournament_id', 'name'], 'required'],
             [['tournament_id', 'user_created', 'user_updated'], 'integer'],
             [['is_active'], 'boolean'],
             [['time_created', 'time_updated'], 'safe'],
-            [['name'], 'string', 'max' => 45],
+            [['name'], 'string', 'max' => 64],
             [['tournament_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tournament::className(), 'targetAttribute' => ['tournament_id' => 'id']],
             [['user_created'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_created' => 'id']],
             [['user_updated'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_updated' => 'id']],

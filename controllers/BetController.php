@@ -6,6 +6,8 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use app\models\Bet;
+use app\models\BetView;
+use app\models\FixtureView;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -33,11 +35,7 @@ class BetController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'index'  => ['GET', 'POST'],
-                    'view'   => ['POST'],
-                    'create' => ['POST'],
-                    'update' => ['POST'],
-                    'delete' => ['POST']
+                    'delete' => ['POST'],
                 ],
             ],
         ];
@@ -49,126 +47,119 @@ class BetController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = $this->search(Yii::$app->request->post());
-        return $this->render('index', ['dataProvider' => $dataProvider]);
+        $query = BetView::find()
+            ->andFilterWhere([
+                'id'            => $params['id']            ?? null,
+                'is_active'     => $params['is_active']     ?? null])
+            ->andFilterWhere(['like', 'name', $params['name'] ?? null])
+            ->andFilterWhere(['like', 'user_created', $params['user_created'] ?? null])
+            ->andFilterWhere(['like', 'time_created', $params['time_created'] ?? null])
+            ->andFilterWhere(['like', 'user_updated', $params['user_updated'] ?? null])
+            ->andFilterWhere(['like', 'time_updated', $params['time_updated'] ?? null]);
+
+        return $this->render('index', [
+            'dataProvider' => new ActiveDataProvider(['query' => $query]),
+        ]);
     }
 
     /**
      * Displays a single Bet model.
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView()
-    {
-        $id = Yii::$app->request->post('id');
-        return $this->render('view', ['model' => $this->findModel($id)]);
-    }
+    public function actionView($id) { return $this->helperCRUD('view', $id); }
 
     /**
      * Creates a new Bet model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
-        $model = new Bet();
-        return $this->helperForm($model, 'create', 'Create Bet');
-    }
+    public function actionCreate() { return $this->helperCRUD('create'); }
 
     /**
      * Updates an existing Bet model.
      * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate()
-    {
-        $id    = Yii::$app->request->post('id');
-        $model = $this->findModel($id);
-        return $this->helperForm($model, 'update', 'Update Bet: ' . $model->id);
-    }
+    public function actionUpdate($id) { return $this->helperCRUD('update', $id); }
 
     /**
      * Deletes an existing Bet model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete()
-    {
-        $id = Yii::$app->request->post('id');
-        $this->findModel($id)->delete();
-        Yii::$app->session->setFlash('success', "Bet deleted successfully.");
-        return $this->redirect(['index']);
-    }
+    public function actionDelete($id) { return $this->helperCRUD('delete', $id); }
 
     /**
-     * Finds the Bet model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Bet the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
+     * Set session flash.
      */
-    protected function findModel($id)
+    protected function setFlash($action)
     {
-        if (($model = Bet::findOne($id)) !== null) return $model;
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    /**
-     * Finds models for dependencies
-     * @return [Fixtures[]]
-     */
-    protected function findDependencyModels()
-    {
-        return [
-            'fixtures' => Yii::$app->db
-                ->createCommand("SELECT f.id, CONCAT(a.name, ' vs ', b.name) AS name FROM fixture f
-                    INNER JOIN team a ON f.teamA_id = a.id
-                    INNER JOIN team b ON f.teamB_id = b.id;")
-                ->queryAll()
+        $flashMessges = [
+            'create' => 'Bet created succesfully.',
+            'update' => 'Bet updated sucessfully.',
+            'delete' => 'Bet deleted sucessfully.'
         ];
+        Yii::$app->session->setFlash('success', Yii::t('app', $flashMessges[$action]));
     }
 
     /**
-     * Creates data provider instance with search query applied
-     * @param array $params
-     * @return ActiveDataProvider
+     * Gets dependencies
      */
-    protected function search($params)
+    protected function getDependencies()
     {
-        $query        = Bet::find();
-        $dataProvider = new ActiveDataProvider(['query' => $query]);
-        $query->andFilterWhere([
-            'id'          => $params['id']          ?? null,
-            'fixture_id'  => $params['fixture_id']  ?? null,
-            'user_id'     => $params['user_id']     ?? null,
-            'teamA_score' => $params['teamA_score'] ?? null,
-            'teamB_score' => $params['teamB_score'] ?? null,
-            'bet_score'   => $params['bet_score']   ?? null,
-            'is_active'   => $params['is_active']   ?? null,
-            'created'     => $params['created']     ?? null,
-            'updated'     => $params['updated']     ?? null,
-        ]);
-        return $dataProvider;
+        return ['fixtures' => FixtureView::find()->select(['id', 'name'])->all()];
     }
 
     /**
-     * Helps render form for Create & Update actions.
+     * Helps render for CRUD actions.
      */
-    protected function helperForm($model, $actionName, $formTitle)
+    protected function helperCRUD($action, $id = null)
     {
-        $dependencies = $this->findDependencyModels();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Bet ' . $actionName . 'd successfully.');
-            return $this->redirect(['index']);
+        //Find model
+        switch ($action) {
+            case 'view':   $model = BetView::findOne($id); break;
+            case 'create': $model = new Bet(); break;
+            default:       $model = Bet::findOne($id);
         }
-        return $this->render('_form', [
-            'formTitle'  => $formTitle,
-            'actionName' => $actionName,
-            'bet'        => $model,
-            'fixtures'   => $dependencies['fixtures']
-        ]);
+        //Throw error if model not found
+        if ($model === null) throw new NotFoundHttpException('The requested page does not exist.');
+
+        //Handle actions
+        switch ($action) {
+
+            //Render view
+            case 'view': return $this->render('view', ['model' => $model]);
+
+            //Handle delete
+            case 'delete':
+                $model->delete();
+                $this->setFlash('delete');
+                return $this->redirect(['index']);
+
+            //Handle & render create & update
+            default:
+                $dependencies = $this->getDependencies();
+
+                if ($model->load(Yii::$app->request->post())) {
+                    $model->image = UploadedFile::getInstance($model, 'image');
+                    $model->image_path = md5($model->name) . '.' . $model->image->extension;
+
+                    if ($model->save() && $model->image->saveAs(SITE_ROOT . '\\uploads\\tournamentImages\\' . $model->image_path)) {
+                        $this->setFlash($action);
+                        return $this->redirect(['index']);
+                    }
+                }
+                return $this->render('_form', [
+                    'action'  => $action,
+                    'bet'     => $model,
+                    'fixtures' => $dependencies['fixtures']
+                ]);
+        }
     }
 }

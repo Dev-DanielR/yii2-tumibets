@@ -6,6 +6,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 use app\models\Fixture;
+use app\models\FixtureView;
 use app\models\Tournament;
 use app\models\TournamentDate;
 use app\models\Team;
@@ -35,13 +36,7 @@ class FixtureController extends Controller
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
-                'actions' => [
-                    'index'  => ['GET', 'POST'],
-                    'view'   => ['POST'],
-                    'create' => ['POST'],
-                    'update' => ['POST'],
-                    'delete' => ['POST']
-                ],
+                'actions' => ['delete' => ['POST']]
             ],
         ];
     }
@@ -52,13 +47,39 @@ class FixtureController extends Controller
      */
     public function actionIndex()
     {
-        $params       = Yii::$app->request->post();
-        $navigation   = $this->findNavigationModels($params['tournament_date_id'] ?? null);
-        $dataProvider = $this->search($params);
+        $params = Yii::$app->request->queryParams;
+        if (!isset($params['tournament_date_id']))
+            throw new NotFoundHttpException('The requested page does not exist.');
+
+        $hierarchy = $this->getHierarchy($params['tournament_date_id']);
+        $query = FixtureView::find()
+            ->andFilterWhere([
+                'tournament_id'      => $params['tournament_id']      ?? null,
+                'tournament_date_id' => $params['tournament_date_id'] ?? null,
+                'id'                 => $params['id']                 ?? null,
+                'teamA_id'           => $params['teamA_id']           ?? null,
+                'teamA_score'        => $params['teamA_score']        ?? null,
+                'teamB_id'           => $params['teamB_id']           ?? null,
+                'teamB_score'        => $params['teamB_score']        ?? null,
+                'start'              => $params['start']              ?? null,
+                'end'                => $params['end']                ?? null,
+                'is_active'          => $params['is_active']          ?? null,
+                'bet_count'          => $params['bet_count']          ?? null,
+            ])
+            ->andFilterWhere(['like', 'tournament', $params['tournament'] ?? null])
+            ->andFilterWhere(['like', 'tournament_date', $params['tournament_date'] ?? null])
+            ->andFilterWhere(['like', 'name', $params['name'] ?? null])
+            ->andFilterWhere(['like', 'teamA', $params['teamA'] ?? null])
+            ->andFilterWhere(['like', 'teamB', $params['teamB'] ?? null])
+            ->andFilterWhere(['like', 'user_created', $params['user_created'] ?? null])
+            ->andFilterWhere(['like', 'time_created', $params['time_created'] ?? null])
+            ->andFilterWhere(['like', 'user_updated', $params['user_updated'] ?? null])
+            ->andFilterWhere(['like', 'time_updated', $params['time_updated'] ?? null]);
+
         return $this->render('index', [
-            'tournament'      => $navigation['tournament'],
-            'tournament_date' => $navigation['tournament_date'],
-            'dataProvider'    => $dataProvider
+            'tournament'      => $hierarchy['tournament'],
+            'tournament_date' => $hierarchy['tournament_date'],
+            'dataProvider'    => new ActiveDataProvider(['query' => $query])
         ]);
     }
 
@@ -67,43 +88,21 @@ class FixtureController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView()
-    {
-        $id         = Yii::$app->request->post('id');
-        $model      = $this->findModel($id);
-        $navigation = $this->findNavigationModels($model->tournament_date_id);
-        return $this->render('view', [
-            'tournament'      => $navigation['tournament'],
-            'tournament_date' => $navigation['tournament_date'],
-            'fixture'         => $model
-        ]);
-    }
+    public function actionView($id) { return $this->helperCRUD('view', $id); }
 
     /**
      * Creates a new Fixture model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
-        $model  = new Fixture();
-        $params = Yii::$app->request->post();
-        $model->tournament_date_id = $params['tournament_date_id'] ?? null;
-        return $this->helperForm($model, 'create', 'Create Fixture');
-    }
+    public function actionCreate() { return $this->helperCRUD('create'); }
 
     /**
      * Updates an existing Fixture model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionUpdate()
-    {
-        $id    = Yii::$app->request->post('id');
-        $model = $this->findModel($id);
-        $model->datesToReadFormat();
-        return $this->helperForm($model, 'update', 'Update Fixture: ' . $model->teamA->name . ' vs ' . $model->teamB->name);
-    }
+    public function actionUpdate($id) { return $this->helperCRUD('update', $id); }
 
     /**
      * Deletes an existing Fixture model.
@@ -111,42 +110,28 @@ class FixtureController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete()
+    public function actionDelete($id) { return $this->helperCRUD('delete', $id); }
+
+    /**
+     * Set session flash.
+     */
+    protected function setFlash($action)
     {
-        $id = Yii::$app->request->post('id');
-        $this->findModel($id)->delete();
-        Yii::$app->session->setFlash('success', "Fixture deleted successfully.");
-        return $this->redirect(['index']);
+        $flashMessges = [
+            'create' => 'Fixture created succesfully.',
+            'update' => 'Fixture updated sucessfully.',
+            'delete' => 'Fixture deleted sucessfully.'
+        ];
+        Yii::$app->session->setFlash('success', Yii::t('app', $flashMessges[$action]));
     }
 
     /**
-     * Finds the Fixture model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Fixture the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
+     * Gets hierarchy data for navigation
      */
-    protected function findModel($id)
+    protected function getHierarchy($id)
     {
-        if (($model = Fixture::find()
-            ->with(['teamA', 'teamB'])
-            ->andFilterWhere(['id' => $id])
-            ->one()) !== null) return $model;
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    /**
-     * Finds models for navigation
-     * @return [Tournament, Tournament_Date]
-     */
-    protected function findNavigationModels($id)
-    {
-        $tournament_date = null;
-        $tournament      = null;
-        if ($id !== null) {
-            $tournament_date = TournamentDate::find()->select(['id', 'name', 'tournament_id'])->where(['id' => $id])->one();
-            $tournament = Tournament::find()->select(['id', 'name'])->where(['id' => $tournament_date->tournament_id])->one();
-        }
+        $tournament_date = TournamentDate::find()->select(['id', 'name', 'tournament_id'])->where(['id' => $id])->one();
+        $tournament      = Tournament::find()->select(['id', 'name'])->where(['id' => $tournament_date->tournament_id])->one();
         return [
             'tournament'      => $tournament,
             'tournament_date' => $tournament_date
@@ -154,69 +139,70 @@ class FixtureController extends Controller
     }
 
     /**
-     * Finds models for dependencies
-     * @return [Tournament_Date[], Team[]]
+     * Gets dependencies
      */
-    protected function findDependencyModels($id)
+    protected function getDependencies()
     {
         return [
-            'tournament_dates' => TournamentDate::find()->select(['id', 'name'])->andFilterWhere(['id' => $id])->all(),
-            'teams'            => Team::find()->select(['id', 'name'])->all()
+            'teams' => Team::find()->select(['id', 'name'])->all()
         ];
     }
 
     /**
-     * Creates data provider instance with search query applied
-     * @param array $params
-     * @return ActiveDataProvider
+     * Helps render for CRUD actions.
      */
-    protected function search($params)
+    protected function helperCRUD($action, $id = null)
     {
-        $query        = Fixture::find()->with(['tournamentDate', 'teamA', 'teamB']);
-        $dataProvider = new ActiveDataProvider(['query' => $query]);
-        $query->andFilterWhere([
-            'id'                 => $params['id']                 ?? null,
-            'tournament_date_id' => $params['tournament_date_id'] ?? null,
-            'teamA_id'           => $params['teamA_id']           ?? null,
-            'teamB_id'           => $params['teamB_id']           ?? null,
-            'teamA_score'        => $params['teamA_score']        ?? null,
-            'teamB_score'        => $params['teamB_score']        ?? null,
-            'start'              => $params['start']              ?? null,
-            'end'                => $params['end']                ?? null,
-            'is_active'          => $params['is_active']          ?? null
-        ]);
-        return $dataProvider;
-    }
+        //Get Model
+        switch ($action) {
 
-    /**
-     * Helps render form for Create & Update actions.
-     */
-    protected function helperForm($model, $actionName, $formTitle)
-    {
-        $navigation   = $this->findNavigationModels($model->tournament_date_id);
-        $dependencies = $this->findDependencyModels($model->tournament_date_id);
+            //Find view model
+            case 'view': $model = FixtureView::findOne($id); break;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', "Fixture " . $actionName . "d successfully.");
-            /*Yii::$app->mailer->compose()
-                ->setFrom(Yii::$app->params['adminEmail'])
-                ->setTo('dev.danielr@gmail.com')
-                ->setSubject(($actionName == 'create') ? 'New Fixture' : 'Fixture Updated')
-                ->setTextBody('Fixture ' . $model->teamA->name .
-                    ' vs ' . $model->teamB->name . ' ' . $actionName . 'd.')
-                ->send();*/
-            return $this->redirect(['index']);
+            //Create model and set tournament date
+            case 'create':
+                $params = Yii::$app->request->queryParams;
+                if (!isset($params['tournament_date_id']))
+                    throw new NotFoundHttpException('The requested page does not exist.');
+
+                $model  = new Fixture();
+                $model->tournament_date_id = $params['tournament_date_id'];
+                break;
+
+            //Find model
+            default: $model = Fixture::findOne($id);
         }
+        if ($model === null) throw new NotFoundHttpException('The requested page does not exist.');
 
-        return $this->render('_form', [
-            'formTitle'        => $formTitle,
-            'actionName'       => $actionName,
-            'tournament'       => $navigation['tournament'],
-            'tournament_date'  => $navigation['tournament_date'],
-            'fixture'          => $model,
-            'tournament_dates' => $dependencies['tournament_dates'],
-            'teams'            => $dependencies['teams']
-        ]);
+        //Handle actions
+        switch ($action) {
 
+            //Handle view
+            case 'view': return $this->render('view', ['model' => $model]);
+
+            //Handle delete
+            case 'delete':
+                $model->delete();
+                $this->setFlash('delete');
+                return $this->redirect(['index', 'tournament_date_id' => $model->tournament_date_id]);
+
+            //Handle create & update
+            default:
+                $hierarchy    = $this->getHierarchy($model->tournament_date_id);
+                $dependencies = $this->getDependencies();
+
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    $this->setFlash($action);
+                    return $this->redirect(['index', 'tournament_date_id' => $model->tournament_date_id]);
+                }
+
+                return $this->render('_form', [
+                    'action'           => $action,
+                    'tournament'       => $hierarchy['tournament'],
+                    'tournament_date'  => $hierarchy['tournament_date'],
+                    'fixture'          => $model,
+                    'teams'            => $dependencies['teams']
+                ]);
+        }
     }
 }

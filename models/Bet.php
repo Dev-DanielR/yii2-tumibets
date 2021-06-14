@@ -7,16 +7,16 @@ use Yii;
 /**
  * This is the model class for table "bet".
  *
- * @property int $id
- * @property int $fixture_id
- * @property int $user_id
- * @property int|null $teamA_score
- * @property int|null $teamB_score
- * @property int|null $bet_score
- * @property bool $is_active
- * @property int $user_created
- * @property string $time_created
- * @property int|null $user_updated
+ * @property int         $id
+ * @property int         $fixture_id
+ * @property int         $user_id
+ * @property int|null    $teamA_score
+ * @property int|null    $teamB_score
+ * @property int|null    $bet_score
+ * @property bool        $is_active
+ * @property int         $user_created
+ * @property string      $time_created
+ * @property int|null    $user_updated
  * @property string|null $time_updated
  *
  * @property Fixture $fixture
