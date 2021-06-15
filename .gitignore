@@ -37,3 +37,6 @@ tests/_support/_generated
 
 #uploads
 web/uploads
+
+#environment variables
+config/mailer.php

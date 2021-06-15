@@ -1,6 +1,7 @@
 <?php
 
 $params = require __DIR__ . '/params.php';
+$mailer = require __DIR__ . '/mailer.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
@@ -33,13 +34,7 @@ $config = [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            'useFileTransport' => false,
-            'transport' => [
-                'class' => 'Swift_MailTransport',
-            ],
-        ],
+        'mailer' => $mailer,
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
