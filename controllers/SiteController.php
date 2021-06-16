@@ -3,10 +3,13 @@
 namespace app\controllers;
 
 use Yii;
-use yii\filters\AccessControl;
+use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use app\models\User;
 use app\models\LoginForm;
 use app\models\RegisterForm;
 use app\models\LanguageForm;
@@ -15,10 +18,6 @@ use app\models\ContactForm;
 
 class SiteController extends Controller
 {
-    static $flashMessages = [
-        'register' => 'User account created successfully.'
-    ];
-
     /**
      * {@inheritdoc}
      */
@@ -118,18 +117,53 @@ class SiteController extends Controller
      */
     public function actionRegister()
     {
-        //if (!Yii::$app->user->isGuest) { return $this->goBack(); }
+        if (!Yii::$app->user->isGuest) { return $this->goBack(); }
 
         $model = new RegisterForm();
         if ($model->load(Yii::$app->request->post()) && $model->register()) {
-            Yii::$app->session->setFlash('success',
-                Yii::t('app', static::$flashMessages['register']));
-            return $this->render('login', ['model' => new LoginForm()]);
+
+            $userModel = User::find()
+                ->select('accessToken')
+                ->where(['main_email' => $model->main_email])
+                ->one();
+            Yii::$app->mailer->compose()
+                ->setFrom('daniel.vasquez@tumi.com.pe')
+                ->setTo($model->main_email)
+                ->setSubject(Yii::t('app', 'Tumibets: Account registered'))
+                ->setHtmlBody('<h2>TUMIBETS</h2>
+                    <p>'. Yii::t('app', 'Your new account has been registered!') .'</p>
+                    <p>'. Html::a(Yii::t('app', 'Validate your account here.'),
+                    [Url::to(['site/validate']), 'accessToken' => $userModel->accessToken]) .'</p>')
+                ->send();
+            Yii::$app->session->setFlash('success', Yii::t('app', 'User account created successfully.'));
+
+            return $this->redirect(['login']);
         }
 
         $model->password = '';
         $model->passwordConfirm = '';
         return $this->render('register', ['model' => $model]);
+    }
+
+    /**
+     * Validates a user via accessToken in email link
+     */
+    public function actionValidate($accessToken)
+    {
+        $userModel = User::find()->where(['accessToken' => $accessToken])->one();
+        if ($userModel === null) throw new NotFoundHttpException('The requested page does not exist.');
+        
+        $userModel->is_validated = TRUE;
+        $didSave = $userModel->save();
+        Yii::$app->session->setFlash(
+            $didSave ? 'success' : 'error',
+            Yii::t('app', $didSave
+                ? 'User account validated successfully.'
+                : 'User account could not be validated.'
+            )
+        );
+
+        return $this->redirect(['login']);
     }
 
     /**
@@ -141,7 +175,6 @@ class SiteController extends Controller
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
-
             return $this->refresh();
         }
         return $this->render('contact', ['model' => $model]);
