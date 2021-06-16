@@ -30,6 +30,9 @@ use Yii;
  */
 class Fixture extends \yii\db\ActiveRecord
 {
+    protected $DB_format = 'Y-m-d H:i:s';
+    protected $read_format = 'd/m/y h:i A';
+
     /**
      * {@inheritdoc}
      */
@@ -96,16 +99,10 @@ class Fixture extends \yii\db\ActiveRecord
     protected function datesToDBFormat()
     {
         $this->start = date($this->DB_format,
-            date_create_from_format(
-                $this->read_format,
-                $this->start
-            )->getTimestamp()
+            date_create_from_format($this->read_format, $this->start)->getTimestamp()
         );
         $this->end = date($this->DB_format,
-            date_create_from_format(
-                $this->read_format,
-                $this->end
-            )->getTimestamp()
+            date_create_from_format($this->read_format, $this->end)->getTimestamp()
         );
     }
 
@@ -115,17 +112,19 @@ class Fixture extends \yii\db\ActiveRecord
     public function datesToReadFormat()
     {
         $this->start = date($this->read_format,
-            date_create_from_format(
-                $this->DB_format,
-                $this->start
-            )->getTimestamp()
+            date_create_from_format($this->DB_format, $this->start)->getTimestamp()
         );
         $this->end = date($this->read_format,
-            date_create_from_format(
-                $this->DB_format,
-                $this->end
-            )->getTimestamp()
+            date_create_from_format($this->DB_format, $this->end)->getTimestamp()
         );
+    }
+
+    /**
+     * Gets name
+     */
+    public function getName()
+    {
+        return $this->teamA->name . ' vs ' . $this->teamB->name;
     }
 
     /**

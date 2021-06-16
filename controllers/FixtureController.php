@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use Yii;
+use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 use app\models\Fixture;
@@ -192,10 +194,20 @@ class FixtureController extends Controller
                 $dependencies = $this->getDependencies();
 
                 if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    Yii::$app->mailer->compose()
+                        ->setFrom('daniel.vasquez@tumi.com.pe')
+                        ->setTo($model->userCreated->main_email)
+                        ->setSubject(Yii::t('app', 'Tumibets: Fixture ' . $action . 'd'))
+                        ->setHtmlBody('<h2>TUMIBETS</h2>
+                            <p>'. Yii::t('app', 'A fixture was ' . $action . 'd for') . ': ' . $model->name .'</p>
+                            <p>'. Html::a(Yii::t('app', 'Check here.'),
+                            [Url::to(['fixture/view']), 'id' => $model->id]) .'</p>')
+                        ->send();
                     $this->setFlash($action);
                     return $this->redirect(['index', 'tournament_date_id' => $model->tournament_date_id]);
                 }
 
+                if ($action === 'update'){ $model->datesToReadFormat(); }
                 return $this->render('_form', [
                     'action'           => $action,
                     'tournament'       => $hierarchy['tournament'],
