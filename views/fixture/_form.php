@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = [
 
 //Fixture Index
 $this->params['breadcrumbs'][] = [
-    'label' => Yii::t('app', 'Tournament Dates'),
+    'label' => Yii::t('app', 'Fixtures'),
     'url'   => ['index', 'tournament_id' => $tournament->id]
 ];
 
