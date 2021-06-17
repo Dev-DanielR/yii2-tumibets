@@ -201,10 +201,10 @@ class FixtureController extends Controller
                     Yii::$app->mailer->compose()
                         ->setFrom('daniel.vasquez@tumi.com.pe')
                         ->setTo($model->userCreated->main_email)
-                        ->setSubject(Yii::t('app', 'Tumibets: Fixture ' . $action . 'd'))
+                        ->setSubject(Yii::t('email', 'Tumibets: Fixture ' . $action . 'd'))
                         ->setHtmlBody('<h2>TUMIBETS</h2>
-                            <p>'. Yii::t('app', 'A fixture was ' . $action . 'd for') . ': ' . $model->name .'</p>
-                            <p>'. Html::a(Yii::t('app', 'Check the fixture here.'),
+                            <p>'. Yii::t('email', 'A fixture was ' . $action . 'd for') . ': ' . $model->name .'</p>
+                            <p>'. Html::a(Yii::t('email', 'Check the fixture here.'),
                             [Url::to(['fixture/view']), 'id' => $model->id]) .'</p>')
                         ->send();
                     return $this->redirect(['index', 'tournament_date_id' => $model->tournament_date_id]);

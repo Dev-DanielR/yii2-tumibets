@@ -129,10 +129,10 @@ class SiteController extends Controller
             Yii::$app->mailer->compose()
                 ->setFrom('daniel.vasquez@tumi.com.pe')
                 ->setTo($model->main_email)
-                ->setSubject(Yii::t('app', 'Tumibets: Account registered'))
+                ->setSubject(Yii::t('email', 'Tumibets: Account registered'))
                 ->setHtmlBody('<h2>TUMIBETS</h2>
-                    <p>'. Yii::t('app', 'Your new account has been registered!') .'</p>
-                    <p>'. Html::a(Yii::t('app', 'Validate your account here.'),
+                    <p>'. Yii::t('email', 'Your new account has been registered!') .'</p>
+                    <p>'. Html::a(Yii::t('email', 'Validate your account here.'),
                     [Url::to(['site/validate']), 'accessToken' => $userModel->accessToken]) .'</p>')
                 ->send();
             Yii::$app->session->setFlash('success', Yii::t('app', 'User account created successfully.'));
