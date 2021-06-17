@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\User;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -18,7 +19,15 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             'id',
-            'is_admin:boolean',
+            [
+                'attribute' => 'role',
+                'value'     => function ($model) {
+                    switch ($model->role) {
+                        case User::ROLE_USER:  return Yii::t('app', 'User');
+                        case User::ROLE_ADMIN: return Yii::t('app', 'Admin');
+                    }
+                }
+            ],
             'username',
             'main_email:email',
             'backup_email:email',

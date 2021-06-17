@@ -9,7 +9,7 @@ use yii\web\IdentityInterface;
  * This is the model class for table "user".
  *
  * @property int         $id
- * @property bool        $is_admin
+ * @property int         $role
  * @property string      $username
  * @property string      $password
  * @property string      $main_email
@@ -37,6 +37,9 @@ use yii\web\IdentityInterface;
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
+    const ROLE_USER  = 1;
+    const ROLE_ADMIN = 100;
+
     /**
      * {@inheritdoc}
      */

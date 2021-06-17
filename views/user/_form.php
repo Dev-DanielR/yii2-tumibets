@@ -18,8 +18,12 @@ if ($action === 'update') $this->params['breadcrumbs'][] = [
     'url' => ['view', 'id' => $model->id]
 ];
 $this->params['breadcrumbs'][] = ucfirst($action);
-?>
 
+$roles = [
+    1   => Yii::t('app', 'User'),
+    100 => Yii::t('app', 'Admin')
+]
+?>
 <div class="user-<?= $action ?>">
 
     <h1><?= Html::encode($this->title) ?></h1>
@@ -27,7 +31,7 @@ $this->params['breadcrumbs'][] = ucfirst($action);
 
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'is_admin')->checkbox() ?>
+        <?= $form->field($model, 'role')->dropDownList($roles) ?>
         <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'main_email')->textInput(['maxlength' => true]) ?>

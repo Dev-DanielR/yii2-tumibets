@@ -5,8 +5,10 @@ namespace app\controllers;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
+use app\components\AccessRule;
+use app\models\User;
 use app\models\Fixture;
 use app\models\FixtureView;
 use app\models\Tournament;
@@ -28,11 +30,12 @@ class FixtureController extends Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class'      => AccessControl::className(),
+                'ruleConfig' => ['class' => AccessRule::className()],
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => [User::ROLE_ADMIN],
                     ],
                 ],
             ],

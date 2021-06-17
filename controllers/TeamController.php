@@ -5,6 +5,8 @@ namespace app\controllers;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use app\components\AccessRule;
+use app\models\User;
 use app\models\Team;
 use app\models\TeamView;
 use yii\web\Controller;
@@ -24,11 +26,12 @@ class TeamController extends Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class'      => AccessControl::className(),
+                'ruleConfig' => ['class' => AccessRule::className()],
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => [User::ROLE_ADMIN],
                     ],
                 ],
             ],

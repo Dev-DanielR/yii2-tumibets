@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\User;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\User */
@@ -28,7 +29,15 @@ $this->params['breadcrumbs'][] = $model->username;
         'model' => $model,
         'attributes' => [
             'id',
-            'is_admin:boolean',
+            [
+                'attribute' => 'role',
+                'value'     => function ($model) {
+                    switch ($model->role) {
+                        case User::ROLE_USER:  return Yii::t('app', 'User');
+                        case User::ROLE_ADMIN: return Yii::t('app', 'Admin');
+                    }
+                }
+            ],
             'username',
             'main_email:email',
             'backup_email:email',
