@@ -137,7 +137,7 @@ class TeamController extends Controller
             default:
                 if ($model->load(Yii::$app->request->post())) {
                     $model->image = UploadedFile::getInstance($model, 'image');
-                    $model->image_path = md5($model->name) . '.' . $model->image->extension;
+                    $model->image_path = md5($model->name . strval(time())) . '.' . $model->image->extension;
         
                     if ($model->save() && $model->image->saveAs(SITE_ROOT . '\\uploads\\teamImages\\' . $model->image_path)) {
                         $this->setFlash($action);
