@@ -65,10 +65,21 @@ $this->params['breadcrumbs'][] = $this->title;
             'tournament',
             'tournament_date',
             'id',
-            'name',
-            'teamA',
+            [
+                'attribute' => 'teamA',
+                'format'    => 'html',
+                'value'     => function ($model) {
+                    return Html::img(Team::IMAGE_FOLDER . $model->teamA_image_path, ['width' => '30px']) . ' ' . $model->teamA;
+                }
+            ],
             'teamA_score',
-            'teamB',
+            [
+                'attribute' => 'teamB',
+                'format'    => 'html',
+                'value'     => function ($model) {
+                    return Html::img(Team::IMAGE_FOLDER . $model->teamB_image_path, ['width' => '30px']) . ' ' . $model->teamB;
+                }
+            ],
             'teamB_score',
             'start:datetime',
             'end:datetime',

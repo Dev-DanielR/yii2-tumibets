@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Team;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -18,13 +19,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             'id',
-            'name',
             [
-                'label'  => Yii::t('app', 'Image'),
-                'format' => 'html',
-                'value'  => function ($model) {
-                    return Html::img(Yii::$app->request->BaseUrl.'/uploads/teamImages/' . $model->image_path,
-                    ['width' => '40px']);
+                'attribute' => 'name',
+                'format'    => 'html',
+                'value'     => function ($model) {
+                    return Html::img(Team::IMAGE_FOLDER . $model->image_path,
+                    ['width' => '30px']) . ' ' . $model->name;
                 }
             ],
             'is_active:boolean',

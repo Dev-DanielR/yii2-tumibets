@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\Team;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\TeamView */
@@ -33,8 +34,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             [
                 'label'  => Yii::t('app', 'Image'),
-                'format' => ['image', ['width' => '80px']],
-                'value'  => Yii::$app->request->BaseUrl.'/uploads/teamImages/' . $model->image_path
+                'format' => ['image', ['width' => '120px']],
+                'value'  => Team::IMAGE_FOLDER . $model->image_path
             ],
             'is_active:boolean',
             'user_created',

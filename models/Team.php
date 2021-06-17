@@ -22,6 +22,7 @@ use Yii;
  */
 class Team extends \yii\db\ActiveRecord
 {
+    const IMAGE_FOLDER = '/uploads/teamImages/';
     public $image;
 
     /**
@@ -67,7 +68,7 @@ class Team extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function beforeSave($insert)
     {
@@ -75,6 +76,27 @@ class Team extends \yii\db\ActiveRecord
         if ($insert) $this->user_created = Yii::$app->user->identity->id;
         else $this->user_updated = Yii::$app->user->identity->id;
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        if (!$insert && isset($changedAttributes['image_path'])) {
+            $image_path = SITE_ROOT . static::IMAGE_FOLDER . $changedAttributes['image_path'];
+            if (file_exists($image_path)) unlink($image_path);
+        }
+        parent::afterSave($insert, $changedAttributes); 
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function afterDelete()
+    {
+        $image_path = SITE_ROOT . static::IMAGE_FOLDER . $this->image_path;
+        if (file_exists($image_path)) unlink($image_path);
     }
 
     /**

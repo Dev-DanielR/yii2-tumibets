@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Tournament;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -27,8 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'  => Yii::t('app', 'Image'),
                 'format' => 'html',
                 'value'  => function ($model) {
-                    return Html::img(Yii::$app->request->BaseUrl . '/uploads/tournamentImages/' . $model->image_path,
-                    ['width' => '40px']);
+                    return Html::img(Tournament::IMAGE_FOLDER . $model->image_path, ['width' => '40px']);
                 }
             ],
             'is_active:boolean',

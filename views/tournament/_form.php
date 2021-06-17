@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\models\Tournament;
 
 /* @var $this   yii\web\View */
 /* @var $action String */
@@ -33,6 +34,7 @@ $this->params['breadcrumbs'][] = ucfirst($action);
         <?php $form = ActiveForm::begin(); ?>
 
         <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+        <?= Html::img(Tournament::IMAGE_FOLDER . $model->image_path, ['width' => '360px']) ?>
         <?= $form->field($model, 'image')->fileInput() ?>
         <?= $form->field($model, 'is_active')->checkbox() ?>
 

@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\models\Team;
 
 /* @var $this   yii\web\View */
 /* @var $action String */
@@ -28,12 +29,9 @@ $this->params['breadcrumbs'][] = ucfirst($action);
         <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
             <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+            <?= Html::img(Team::IMAGE_FOLDER . $model->image_path, ['width' => '120px']) ?>
             <?= $form->field($model, 'image')->fileInput() ?>
             <?= $form->field($model, 'is_active')->checkbox() ?>
-            <?= $form->field($model, 'user_created')->textInput() ?>
-            <?= $form->field($model, 'time_created')->textInput() ?>
-            <?= $form->field($model, 'user_updated')->textInput() ?>
-            <?= $form->field($model, 'time_updated')->textInput() ?>
 
             <div class="form-group">
                 <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
