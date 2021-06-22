@@ -56,7 +56,8 @@ class TournamentDateController extends Controller
         $query = TournamentDateView::find()
             ->andFilterWhere([
                 'id'            => $params['id']        ?? null,
-                'is_active'     => $params['is_active'] ?? null
+                'is_active'     => $params['is_active'] ?? null,
+                'tournament_id' => $params['tournament_id']
             ])
             ->andFilterWhere(['like', 'name', $params['name'] ?? null])
             ->andFilterWhere(['like', 'tournament', $params['tournament'] ?? null])
