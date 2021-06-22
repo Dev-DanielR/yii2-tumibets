@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use Yii\base\Model;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -10,6 +11,10 @@ use yii\web\Response;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use app\models\User;
+use app\models\Tournament;
+use app\models\TournamentDate;
+use app\models\Fixture;
+use app\models\BetForm;
 use app\models\LoginForm;
 use app\models\RegisterForm;
 use app\models\LanguageForm;
@@ -68,7 +73,77 @@ class SiteController extends Controller
             Yii::$app->language = $model->selected;
             Yii::$app->session->set('user.locale', $model->selected);
         }
-        return $this->render('index', ['model' => $model]);
+
+        $tournament = Tournament::find()->where(['is_active' => 1])->one();
+        $tournament_date = TournamentDate::find()->where([
+            'is_active'     => 1,
+            'tournament_id' => $tournament->id
+        ])->one();
+        $tournament_dates = TournamentDate::find()->where([
+            'is_active'     => 0,
+            'tournament_id' => $tournament->id,
+        ])->all();
+
+        return $this->render('index', [
+            'model'            => $model,
+            'tournament'       => $tournament,
+            'tournament_date'  => $tournament_date,
+            'tournament_dates' => $tournament_dates
+        ]);
+    }
+
+    /**
+     * Displays tournament dates for any tournament.
+     * @return string
+     */
+    public function actionCheckDates($id)
+    {
+        $tournament = Tournament::findOne($id);
+        $tournament_dates = TournamentDate::find()->with('fixtures')
+            ->where(['tournament_id' => $tournament->id])->all();
+
+        return $this->render('check_dates', [
+            'tournament'       => $tournament,
+            'tournament_dates' => $tournament_dates
+        ]);
+    }
+
+    /**
+     * Handles creation of bets.
+     */
+    public function actionMakeBet()
+    {
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->session->setFlash('info', Yii::t('app', 'You need to be logged in to participate.'));
+            return $this->redirect(['login']);
+        }
+
+        $tournament      = Tournament::find()->where(['is_active' => 1])->one();
+        $tournament_date = TournamentDate::find()->with('fixtures')->where([
+            'is_active'     => 1,
+            'tournament_id' => $tournament->id
+        ])->one();
+        $bets = [];
+
+        foreach ($tournament_date->fixtures as $fixture) {
+            $fixture->datesToReadFormat();
+            $bets[] = new BetForm();
+        }
+
+        echo print_r($bets);
+        echo print_r(Yii::$app->request->post());
+        if (Model::loadMultiple($bets, Yii::$app->request->post()) && Model::validateMultiple($bets)) {
+            $count = 0;
+            foreach ($bets as $bet) { if ($bet->register()) $count++; }
+            Yii::$app->session->setFlash('success', Yii::t('app', '{count} Bets saved.', ['count' => $count]));
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('make_bet', [
+            'tournament'      => $tournament,
+            'tournament_date' => $tournament_date,
+            'bets'            => $bets
+        ]);
     }
 
     /**

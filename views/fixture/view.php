@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\Team;
 
 /* @var $this  yii\web\View */
 /* @var $model app\models\FixtureView */
